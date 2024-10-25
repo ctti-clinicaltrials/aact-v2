@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get "mapping", to: "data_mapping#index"
+      get "documentation", to: "documentation#index"
     end
 
     namespace :v2 do
