@@ -1,3 +1,5 @@
+# NOT USED FOR BUILDING DOCS FOR AACT ADMIN
+
 module Ctgov
   class ApiMetadata < ApplicationRecord
     self.table_name = "ctgov.api_metadata"

@@ -1,3 +1,5 @@
+# NOT USED FOR BUILDING DOCS FOR AACT ADMIN
+
 namespace :data_mapping do
   desc "Process mapping source file using DataMappingService"
 

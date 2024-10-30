@@ -4,5 +4,7 @@ module Ctgov
 
     # connect to aact-core database
     establish_connection :external
+
+    scope :version_2, -> { where(version: 2) }
   end
 end
