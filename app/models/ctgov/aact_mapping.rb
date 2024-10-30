@@ -1,3 +1,5 @@
+# NOT USED FOR BUILDING DOCS FOR AACT ADMIN
+
 module Ctgov
   class AactMapping < ApplicationRecord
     self.table_name = "ctgov.aact_mappings"

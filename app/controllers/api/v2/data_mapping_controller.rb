@@ -1,3 +1,5 @@
+# NOT USED FOR BUILDING DOCS FOR AACT ADMIN
+# v2 namespace is for future API endpoints exposed to the public
 module Api
   module V2
     class DataMappingController < ApplicationController

@@ -1,9 +1,9 @@
+# NOT USED FOR BUILDING DOCS FOR AACT ADMIN
+
 class DataMappingService
   def initialize(mapping)
     @mapping = mapping
   end
-
-  # TODO: add method for fetching combined mapping data
 
   def data_mapping
     # process_mapping(@mapping)

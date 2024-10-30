@@ -20,15 +20,32 @@ class V1DocumentationService
       docs << build_response(db_item, api_info)
     end
 
+    # TODO: handle edge cases like browse_conditions/mesh_term
+
     docs
   end
 
   private
 
-  def build_response(schema_item, api_info)
+  def build_response(schema_field, meta_info)
     {
-      ctgov_schema: schema_item,
-      ctgov_api: api_info
+      id: schema_field.id,
+      active: schema_field.active,
+      table_name: schema_field.table_name,
+      column_name: schema_field.column_name,
+      data_type: schema_field.data_type,
+      description: schema_field.description,
+      # api metadata fields
+      ctgov_name: meta_info&.name,
+      ctgov_data_type: meta_info&.data_type,
+      ctgov_piece: meta_info&.piece,
+      ctgov_source_type: meta_info&.source_type,
+      ctgov_synonyms: meta_info&.synonyms,
+      ctgov_label: meta_info&.label,
+      ctgov_url: meta_info&.url,
+      ctgov_section: meta_info&.section,
+      ctgov_module: meta_info&.module,
+      ctgov_path: meta_info&.path
     }
   end
 end

@@ -1,11 +1,12 @@
+# v1 namespace related to the API functionality to serve the AACT Admin UI
+
 module Api
   module V1
     class DocumentationController < ApplicationController
       def index
-        # TODO: review returning active only records
         schema = Ctgov::V1Schema.all
         mappings = Ctgov::V1Mapping.all
-        metadata = Ctgov::V1ApiMetadata.all
+        metadata = Ctgov::V1ApiMetadata.version_2
 
         documentation_service = V1DocumentationService.new(schema, mappings, metadata)
         docs = documentation_service.build_documentation

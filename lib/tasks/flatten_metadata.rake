@@ -1,4 +1,4 @@
-# lib/tasks/flatten_metadata.rake
+# NOT USED FOR BUILDING DOCS FOR AACT ADMIN
 
 namespace :metadata do
   desc "Flatten and print metadata information"
