@@ -3,6 +3,7 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
+  #TODO: review using fetch
   host: <%= ENV.fetch("DB_HOST") %>
   port: <%= ENV.fetch("DB_PORT") %>
 
@@ -21,3 +22,13 @@ test:
 production:
   <<: *default
   url: <%= ENV["DB_URL="] %>
+
+external:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("EXTERNAL_DB_POOL") { 5 } %>
+  host: <%= ENV.fetch("EXTERNAL_DB_HOST") %>
+  port: <%= ENV.fetch("EXTERNAL_DB_PORT") %>
+  username: <%= ENV["EXTERNAL_DB_USER"] %>
+  password: <%= ENV["EXTERNAL_DB_PASSWORD"] %>
+  database: <%= ENV["EXTERNAL_DB_NAME"] %>

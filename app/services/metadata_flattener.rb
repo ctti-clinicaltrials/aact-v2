@@ -1,3 +1,5 @@
+# NOT USED FOR BUILDING DOCS FOR AACT ADMIN
+
 class MetadataFlattener
   def initialize(metadata, version)
       @metadata = metadata
