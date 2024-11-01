@@ -1,3 +1,5 @@
+# NOT USED FOR BUILDING DOCS FOR AACT ADMIN
+
 class DataMappingService
   def initialize(mapping)
     @mapping = mapping
