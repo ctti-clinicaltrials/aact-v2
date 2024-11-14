@@ -4,7 +4,5 @@ module Ctgov
 
     # connect to aact-core database
     establish_connection :external
-
-    scope :active, -> { where(active: true) }
   end
 end
