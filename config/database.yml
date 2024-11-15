@@ -3,32 +3,35 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-  #TODO: review using fetch
-  host: <%= ENV.fetch("DB_HOST") %>
-  port: <%= ENV.fetch("DB_PORT") %>
 
-  username: <%= ENV["DB_USER"] %>
-  password: <%= ENV["DB_PASSWORD"] %>
-  database: <%= ENV["DB_NAME"] %>
 
 development:
   <<: *default
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: <%= ENV.fetch("DB_USER", "rails") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "password") %>
+  database: <%= ENV.fetch("DB_NAME", "aact_new") %>
 
 test:
   <<: *default
-  database: <%= ENV["DB_NAME"] %>_test
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: <%= ENV.fetch("DB_USER", "rails") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "password") %>
+  database: <%= ENV.fetch("DB_NAME", "aact_new_test") %>
 
 
 production:
   <<: *default
-  url: <%= ENV["DB_URL="] %>
+  url: <%= ENV["DB_URL"] %>
 
 external:
   adapter: postgresql
   encoding: unicode
-  pool: <%= ENV.fetch("EXTERNAL_DB_POOL") { 5 } %>
-  host: <%= ENV.fetch("EXTERNAL_DB_HOST") %>
-  port: <%= ENV.fetch("EXTERNAL_DB_PORT") %>
-  username: <%= ENV["EXTERNAL_DB_USER"] %>
-  password: <%= ENV["EXTERNAL_DB_PASSWORD"] %>
-  database: <%= ENV["EXTERNAL_DB_NAME"] %>
+  pool: <%= ENV.fetch("EXTERNAL_DB_POOL", 5) %>
+  host: <%= ENV.fetch("EXTERNAL_DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("EXTERNAL_DB_PORT", 5432) %>
+  username: <%= ENV.fetch("EXTERNAL_DB_USER", "external_user") %>
+  password: <%= ENV.fetch("EXTERNAL_DB_PASSWORD", "external_password") %>
+  database: <%= ENV.fetch("EXTERNAL_DB_NAME", "external_db") %>
