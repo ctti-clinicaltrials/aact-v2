@@ -13,9 +13,8 @@ module Api
 
         respond_to do |format|
           format.json { render json: docs }
+          format.csv { send_data documentation_service.generate_csv(docs), filename: "aact_documentation.csv" }
         end
-      end
-
       end
     end
   end

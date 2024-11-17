@@ -21,8 +21,16 @@ class V1DocumentationService
     end
 
     # TODO: handle edge cases like browse_conditions/mesh_term
-
     docs
+  end
+
+  def generate_csv(docs)
+    CSV.generate(headers: true, col_sep: "|") do |csv|
+      csv << docs.first.keys # adds headers - update names
+      docs.each do |doc|
+        csv << doc.values
+      end
+    end
   end
 
   private
