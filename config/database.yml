@@ -3,35 +3,25 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
 
-
 development:
-  primary:
-    <<: *default
-    host: <%= ENV.fetch("DB_HOST", "localhost") %>
-    port: <%= ENV.fetch("DB_PORT", 5432) %>
-    database: <%= ENV.fetch("DB_NAME", "aact_new") %>
-    username: <%= ENV.fetch("DB_USER", ENV['USER']) %>
-    password: <%= ENV.fetch("DB_PASSWORD", "") %>
-    
-  # aact core db currently has data for building documentation for aact-admin
-  external:
-    <<: *default
-    host: <%= ENV.fetch("AACT_CORE_DB_HOST", "localhost") %>
-    port: <%= ENV.fetch("AACT_CORE_DB_PORT", 5432) %>
-    database: <%= ENV.fetch("AACT_CORE_DB_NAME", "aact") %>
-    username: <%= ENV.fetch("AACT_CORE_DB_USER", ENV['USER']) %>
-    password: <%= ENV.fetch("AACT_CORE_DB_PASSWORD", "") %>
-    
+  <<: *default
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  database: <%= ENV.fetch("DB_NAME", "aact_new") %>
+  username: <%= ENV.fetch("DB_USER", ENV['USER']) %>
+  password: <%= ENV.fetch("DB_PASSWORD", "") %>
 
 test:
   <<: *default
   database: <%= ENV.fetch("DB_NAME", "aact_new") %>_test
 
 production:
-  primary:
-    <<: *default
-    url: <%= ENV["DB_URL"] %>
+  <<: *default
+  url: <%= ENV["DB_URL"] %>
 
-  external:
-    <<: *default
-    url: <%= ENV["AACT_CORE_DB_URL"] %>
+# aact core db currently has data for building documentation for aact-admin
+external:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  url: <%= ENV["AACT_CORE_DB_URL"] %>

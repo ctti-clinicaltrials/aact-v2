@@ -46,8 +46,7 @@ class V1DocumentationService
       description: schema_field.description,
       # api metadata fields
       ctgov_data_point_name: meta_info&.name,
-      ctgov_data_point_label: meta_info&.piece,
-      ctgov_data_point_label_formatted: meta_info&.formatted_piece,
+      ctgov_data_point_label: meta_info&.formatted_piece,
       ctgov_data_type: meta_info&.data_type,
       ctgov_source_type: meta_info&.source_type,
       ctgov_synonyms: meta_info&.synonyms,
