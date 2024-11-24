@@ -57,4 +57,7 @@ class V1DocumentationService
       ctgov_path: meta_info&.path
     }
   end
+
+  def build_csv_response
+  end
 end
