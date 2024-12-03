@@ -1,3 +1,4 @@
+require "ostruct"
 class V1DocumentationService
   def initialize(schema, mappings, metadata)
     @metadata = metadata
@@ -22,6 +23,22 @@ class V1DocumentationService
 
     # TODO: handle edge cases like browse_conditions/mesh_term
     docs
+  end
+
+  def update_schema(id, doc_params)
+    Rails.logger.info("Updating schema record: #{id}")
+    # TODO: handle empty description to null
+    record = @schema.find { |schema| schema.id == id.to_i }
+
+    # TODO: review replacing OpenStruct with a custom class
+    return OpenStruct.new(success?: false, errors: [ "Record not found" ]) unless record
+
+    # record is V1Schema model instance, so update triggers db operation
+    if record.update(doc_params)
+      OpenStruct.new(success?: true, record: record)
+    else
+      OpenStruct.new(success?: false, errors: record.errors)
+    end
   end
 
   def generate_csv(docs)

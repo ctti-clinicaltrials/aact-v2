@@ -3,15 +3,20 @@ require "csv"
 module Api
   module V1
     class DocumentationController < ApplicationController
+      # TODO: review CSRF protection before deploying
       protect_from_forgery with: :null_session
 
-      def index
-        schema = Ctgov::V1Schema.all
-        mappings = Ctgov::V1Mapping.all
-        metadata = Ctgov::V1ApiMetadata.all
+      def initialize
+        super
+        @documentation_service = V1DocumentationService.new(
+          Ctgov::V1Schema.all,
+          Ctgov::V1Mapping.all,
+          Ctgov::V1ApiMetadata.all
+        )
+      end
 
-        documentation_service = V1DocumentationService.new(schema, mappings, metadata)
-        docs = documentation_service.build_documentation
+      def index
+        docs = @documentation_service.build_documentation
 
         respond_to do |format|
           format.json { render json: docs }
@@ -20,13 +25,16 @@ module Api
       end
 
       def update
-        record = Ctgov::V1Schema.find(params[:id])
-        if record.update(doc_params)
-          render json: record, status: :ok
+        result = @documentation_service.update_schema(params[:id], doc_params)
+
+        if result.success?
+          render json: result.record, status: :ok
         else
-          render json: record.errors, status: :unprocessable_entity
+          render json: { errors: result.errors }, status: :unprocessable_entity
         end
       end
+
+      private
 
       def doc_params
         params.require(:documentation).permit(:active, :description)
