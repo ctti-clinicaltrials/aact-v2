@@ -1,9 +1,10 @@
 require "ostruct"
 class V1DocumentationService
-  def initialize(schema, mappings, metadata)
-    @metadata = metadata
-    @mappings = mappings
-    @schema = schema
+  def initialize
+    # TODO: optimize queries (review adding associations)
+    @metadata = Ctgov::V1ApiMetadata.all
+    @mappings = Ctgov::V1Mapping.all
+    @schema = Ctgov::V1Schema.order(:id, :table_name).all
   end
 
   # Building documentation starting from the schema
@@ -41,15 +42,6 @@ class V1DocumentationService
     end
   end
 
-  def generate_csv(docs)
-    CSV.generate(headers: true, col_sep: "|") do |csv|
-      csv << docs.first.keys # adds headers - update names
-      docs.each do |doc|
-        csv << doc.values
-      end
-    end
-  end
-
   private
 
   def build_response(schema_field, meta_info)
@@ -61,7 +53,7 @@ class V1DocumentationService
       data_type: schema_field.data_type,
       nullable: schema_field.nullable,
       description: schema_field.description,
-      # api metadata fields
+      # api metadata fields - TODO: refactor to group and not include if no values
       ctgov_data_point_name: meta_info&.name,
       ctgov_data_point_label: meta_info&.formatted_piece,
       ctgov_data_type: meta_info&.data_type,
@@ -73,8 +65,5 @@ class V1DocumentationService
       ctgov_module: meta_info&.ctgov_module,
       ctgov_path: meta_info&.path
     }
-  end
-
-  def build_csv_response
   end
 end

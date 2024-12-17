@@ -3,24 +3,25 @@ require "csv"
 module Api
   module V1
     class DocumentationController < ApplicationController
-      # TODO: review CSRF protection before deploying
-      protect_from_forgery with: :null_session
+      # TODO: review before deploying
+      # Completely skips CSRF verification for all actions in this controller
+      skip_before_action :verify_authenticity_token
 
-      def initialize
-        super
-        @documentation_service = V1DocumentationService.new(
-          Ctgov::V1Schema.all,
-          Ctgov::V1Mapping.all,
-          Ctgov::V1ApiMetadata.all
-        )
-      end
+      before_action :setup_documentation_service
+
 
       def index
         docs = @documentation_service.build_documentation
 
+        # TODO: handle empty docs object
         respond_to do |format|
           format.json { render json: docs }
-          format.csv { send_data documentation_service.generate_csv(docs), filename: "aact_documentation.csv" }
+          format.csv do
+            csv_service = V1DocumentationCsvService.new(docs)
+            send_data csv_service.generate,
+                      filename: "aact_documentation.csv",
+                      type: "text/csv"
+          end
         end
       end
 
@@ -38,6 +39,10 @@ module Api
 
       def doc_params
         params.require(:documentation).permit(:active, :description)
+      end
+
+      def setup_documentation_service
+        @documentation_service = V1DocumentationService.new
       end
     end
   end
