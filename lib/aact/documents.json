@@ -1,0 +1,38 @@
+[
+  {
+    "table": "provided_documents",
+    "root": [
+      "documentSection",
+      "largeDocumentModule",
+      "largeDocs"
+    ],
+    "columns": [
+      {
+        "name": "document_type",
+        "value": "label"
+      },
+      {
+        "name": "has_protocol",
+        "value": "hasProtocol"
+      },
+      {
+        "name": "has_icf",
+        "value": "hasIcf"
+      },
+      {
+        "name": "has_sap",
+        "value": "hasSap"
+      },
+      {
+        "name": "document_date",
+        "value": "date"
+      },
+      {
+        "name": "url",
+        "value": "filename",
+        "convert_to": {}
+      }
+    ],
+    "id": 34
+  }
+]

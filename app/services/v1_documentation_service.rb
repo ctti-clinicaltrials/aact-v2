@@ -1,0 +1,69 @@
+require "ostruct"
+class V1DocumentationService
+  def initialize
+    # TODO: optimize queries (review adding associations)
+    @metadata = Ctgov::V1ApiMetadata.all
+    @mappings = Ctgov::V1Mapping.all
+    @schema = Ctgov::V1Schema.order(:id, :table_name).all
+  end
+
+  # Building documentation starting from the schema
+  def build_documentation
+    docs = []
+
+    @schema.each do |db_item|
+      # TODO: refactor (use scopes on mapping)
+      mapping = @mappings.find { |map| map.table_name == db_item.table_name && map.field_name == db_item.column_name }
+
+      # Find metadata based on api_path from the mapping (if mapping exists)
+      api_info = mapping ? @metadata.find { |meta| meta.path == mapping.api_path } : nil
+
+      # build documentation object
+      docs << build_response(db_item, api_info)
+    end
+
+    # TODO: handle edge cases like browse_conditions/mesh_term
+    docs
+  end
+
+  def update_schema(id, doc_params)
+    Rails.logger.info("Updating schema record: #{id}")
+    # TODO: handle empty description to null
+    record = @schema.find { |schema| schema.id == id.to_i }
+
+    # TODO: review replacing OpenStruct with a custom class
+    return OpenStruct.new(success?: false, errors: [ "Record not found" ]) unless record
+
+    # record is V1Schema model instance, so update triggers db operation
+    if record.update(doc_params)
+      OpenStruct.new(success?: true, record: record)
+    else
+      OpenStruct.new(success?: false, errors: record.errors)
+    end
+  end
+
+  private
+
+  def build_response(schema_field, meta_info)
+    {
+      id: schema_field.id,
+      active: schema_field.active,
+      table_name: schema_field.table_name,
+      column_name: schema_field.column_name,
+      data_type: schema_field.data_type,
+      nullable: schema_field.nullable,
+      description: schema_field.description,
+      # api metadata fields - TODO: refactor to group and not include if no values
+      ctgov_data_point_name: meta_info&.name,
+      ctgov_data_point_label: meta_info&.formatted_piece,
+      ctgov_data_type: meta_info&.data_type,
+      ctgov_source_type: meta_info&.source_type,
+      ctgov_synonyms: meta_info&.synonyms,
+      ctgov_url_label: meta_info&.label,
+      ctgov_url: meta_info&.url,
+      ctgov_section: meta_info&.ctgov_section,
+      ctgov_module: meta_info&.ctgov_module,
+      ctgov_path: meta_info&.path
+    }
+  end
+end
