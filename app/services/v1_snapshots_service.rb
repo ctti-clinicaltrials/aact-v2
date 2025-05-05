@@ -1,13 +1,9 @@
 class V1SnapshotsService
-  SNAPSHOT_TYPES = ["pgdump", "flatfiles"].freeze
-
-  def initialize
-    load_latest_snapshots
-  end
+  SNAPSHOT_TYPES = ["pgdump", "flatfiles", "covid"].freeze
 
   def latest
     SNAPSHOT_TYPES.map do |type|
-      snapshot = @latest_snapshots[type]
+      snapshot = latest_snapshot_of_type(type)
       next unless snapshot
 
       {
@@ -37,11 +33,8 @@ class V1SnapshotsService
 
   private
 
-  def load_latest_snapshots
-    @latest_snapshots = {}
-    SNAPSHOT_TYPES.each do |type|
-      @latest_snapshots[type] = Aact::Snapshot.latest_of_type(type)
-    end
+  def latest_snapshot_of_type(type)
+    Aact::Snapshot.latest_of_type(type)
   end
 
   def fetch_all_snapshots_by_type(type)

@@ -7,11 +7,16 @@ module Aact
 
     TYPE_MAPPING = {
       "pgdump" => "snapshot",
-      "flatfiles" => "pipefiles"
+      "flatfiles" => "pipefiles",
+      "covid" => "covid-19" 
     }.freeze
 
-    scope :latest_of_type, ->(type) {
-      where(file_type: TYPE_MAPPING[type]).order(created_at: :desc).first if TYPE_MAPPING[type].present?
-    }
+    def self.latest_of_type(type)
+      return nil unless TYPE_MAPPING[type].present?
+      
+      where(file_type: TYPE_MAPPING[type])
+        .order(created_at: :desc)
+        .first
+    end
   end
 end
