@@ -29,7 +29,7 @@ class LogsService
   # process file
   def process_logs(file_path)
     metrics = extract_metrics(file_path)
-    puts "Metrics extracted: #{metrics.inspect}"
+    # puts "Metrics extracted: #{metrics.inspect}"
     persist_metrics(metrics)
   end
 
@@ -97,8 +97,9 @@ class LogsService
   end
 
   def persist_metrics(metrics)
-    puts "date_str: #{@date_str} - #{Date.parse(@date_str)} "
     log_date = Date.parse(@date_str) rescue Date.yesterday
+    saved_count = 0
+    error_count = 0
 
     metrics[:user_activity].each do |username, count|
       # Find or create a record for this user and date
@@ -112,10 +113,13 @@ class LogsService
       metric.total_duration_ms = metrics[:user_duration][username].to_f
 
       if metric.save
-        puts "Saved metrics for user: #{username} with #{count} queries, total duration: #{metric.total_duration_ms.round(2)}ms"
+        saved_count += 1
       else
-        puts "Error saving metrics for #{username}: #{metric.errors.full_messages.join(', ')}"
+        error_count += 1
+        Rails.logger.error "Error saving metrics for #{username}: #{metric.errors.full_messages.join(', ')}"
       end
     end
+
+    puts "Metrics saved: #{saved_count} users processed#{error_count > 0 ? ", #{error_count} errors" : ""}"
   end
 end
