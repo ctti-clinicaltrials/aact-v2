@@ -104,6 +104,40 @@ ALTER SEQUENCE ctgov.api_metadata_id_seq OWNED BY ctgov.api_metadata.id;
 
 
 --
+-- Name: aact_public_query_metrics; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.aact_public_query_metrics (
+    id bigint NOT NULL,
+    log_date date NOT NULL,
+    username character varying NOT NULL,
+    query_count integer DEFAULT 0 NOT NULL,
+    total_duration_ms double precision DEFAULT 0.0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: aact_public_query_metrics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.aact_public_query_metrics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: aact_public_query_metrics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.aact_public_query_metrics_id_seq OWNED BY public.aact_public_query_metrics.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -139,6 +173,13 @@ ALTER TABLE ONLY ctgov.api_metadata ALTER COLUMN id SET DEFAULT nextval('ctgov.a
 
 
 --
+-- Name: aact_public_query_metrics id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.aact_public_query_metrics ALTER COLUMN id SET DEFAULT nextval('public.aact_public_query_metrics_id_seq'::regclass);
+
+
+--
 -- Name: aact_mappings aact_mappings_pkey; Type: CONSTRAINT; Schema: ctgov; Owner: -
 --
 
@@ -152,6 +193,14 @@ ALTER TABLE ONLY ctgov.aact_mappings
 
 ALTER TABLE ONLY ctgov.api_metadata
     ADD CONSTRAINT api_metadata_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: aact_public_query_metrics aact_public_query_metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.aact_public_query_metrics
+    ADD CONSTRAINT aact_public_query_metrics_pkey PRIMARY KEY (id);
 
 
 --
@@ -185,6 +234,13 @@ CREATE UNIQUE INDEX index_aact_mappings_on_table_field_api_path ON ctgov.aact_ma
 
 
 --
+-- Name: index_aact_public_query_metrics_on_log_date_and_username; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_aact_public_query_metrics_on_log_date_and_username ON public.aact_public_query_metrics USING btree (log_date, username);
+
+
+--
 -- Name: aact_mappings fk_rails_a68c0de943; Type: FK CONSTRAINT; Schema: ctgov; Owner: -
 --
 
@@ -199,6 +255,7 @@ ALTER TABLE ONLY ctgov.aact_mappings
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250601000000'),
 ('20241013183335'),
 ('20241004010026'),
 ('20241003191112');
