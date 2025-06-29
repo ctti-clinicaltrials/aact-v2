@@ -64,4 +64,34 @@ namespace :logs do
       raise e
     end
   end
+
+  desc "Process JSON logs for a specific date"
+  task :process_json, [ :date ] => :environment do |t, args|
+    date = args[:date] || Date.yesterday.strftime("%Y-%m-%d")
+
+    puts "=== Processing JSON logs for #{date} ==="
+    service = JsonLogsService.new(date)
+    service.process_daily_logs
+    puts "=== JSON log processing completed ==="
+  end
+
+  desc "Download and process JSON logs for yesterday"
+  task daily_process_json: :environment do
+    date = Date.yesterday
+
+    puts "=== Starting Daily JSON Log Processing for #{date} ==="
+    Rails.logger.info "Daily JSON log processing started for #{date}"
+
+    begin
+      service = JsonLogsService.new(date)
+      service.process_daily_logs
+
+      puts "=== Daily JSON Log Processing Completed Successfully ==="
+      Rails.logger.info "Daily JSON log processing completed successfully for #{date}"
+    rescue StandardError => e
+      puts "❌ Error: #{e.message}"
+      Rails.logger.error "Daily JSON log processing failed for #{date}: #{e.message}"
+      raise e
+    end
+  end
 end
