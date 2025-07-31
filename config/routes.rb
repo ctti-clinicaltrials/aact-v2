@@ -9,6 +9,8 @@ Rails.application.routes.draw do
           get :latest
         end
       end
+      get "analytics/database_usage"
+      get "analytics/user_usage"
     end
 
     namespace :v2 do
