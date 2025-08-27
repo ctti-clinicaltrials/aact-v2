@@ -65,33 +65,25 @@ namespace :logs do
     end
   end
 
-  desc "Process JSON logs for a specific date"
+  desc "Process JSON logs for a specific date (using Sidekiq)"
   task :process_json, [ :date ] => :environment do |t, args|
     date = args[:date] || Date.yesterday.strftime("%Y-%m-%d")
 
-    puts "=== Processing JSON logs for #{date} ==="
-    service = JsonLogsService.new(date)
-    service.process_daily_logs
-    puts "=== JSON log processing completed ==="
+    puts "=== Enqueuing JSON logs processing job for #{date} ==="
+    job_id = JsonLogsProcessorWorker.perform_async(date)
+    puts "=== Job enqueued with ID: #{job_id} ==="
   end
 
-  desc "Download and process JSON logs for yesterday"
+  desc "Download and process JSON logs for yesterday (using Sidekiq)"
   task daily_process_json: :environment do
-    date = Date.yesterday
+    date = Date.yesterday.strftime("%Y-%m-%d")
 
-    puts "=== Starting Daily JSON Log Processing for #{date} ==="
-    Rails.logger.info "Daily JSON log processing started for #{date}"
+    puts "=== Enqueuing daily JSON logs processing job for #{date} ==="
+    Rails.logger.info "Enqueuing daily JSON log processing for #{date}"
 
-    begin
-      service = JsonLogsService.new(date)
-      service.process_daily_logs
+    job_id = JsonLogsProcessorWorker.perform_async(date)
 
-      puts "=== Daily JSON Log Processing Completed Successfully ==="
-      Rails.logger.info "Daily JSON log processing completed successfully for #{date}"
-    rescue StandardError => e
-      puts "❌ Error: #{e.message}"
-      Rails.logger.error "Daily JSON log processing failed for #{date}: #{e.message}"
-      raise e
-    end
+    puts "=== Job enqueued with ID: #{job_id} ==="
+    Rails.logger.info "Daily JSON log processing job enqueued with ID: #{job_id}"
   end
 end
