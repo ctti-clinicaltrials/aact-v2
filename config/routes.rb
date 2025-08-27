@@ -1,4 +1,8 @@
+require "sidekiq/web"
+
 Rails.application.routes.draw do
+  mount Sidekiq::Web => "/sidekiq"
+
   get "up" => "rails/health#show", as: :rails_health_check
 
   namespace :api do
@@ -11,6 +15,9 @@ Rails.application.routes.draw do
       end
       get "analytics/database_usage"
       get "analytics/user_usage"
+
+      # Logs processing endpoint
+      post "logs/process_json"
     end
 
     namespace :v2 do
