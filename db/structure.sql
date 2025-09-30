@@ -255,6 +255,9 @@ ALTER TABLE ONLY ctgov.aact_mappings
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250930134454'),
+('20250930134453'),
+('20250930134452'),
 ('20250601000000'),
 ('20241013183335'),
 ('20241004010026'),
