@@ -3,6 +3,9 @@ require "csv"
 module Api
   module V1
     class DocumentationController < ApplicationController
+      # Skip authentication for API endpoints (server-to-server)
+      allow_unauthenticated_access
+      
       # TODO: review before deploying
       # Completely skips CSRF verification for all actions in this controller
       skip_before_action :verify_authenticity_token

@@ -1,6 +1,9 @@
 module Api
   module V1
     class LogsController < ApplicationController
+      # Skip authentication for API endpoints (server-to-server)
+      allow_unauthenticated_access
+      
       skip_before_action :verify_authenticity_token, only: [ :process_json ]
 
       # POST /api/v1/logs/process_json

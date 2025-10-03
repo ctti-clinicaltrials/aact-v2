@@ -159,6 +159,71 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sessions (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    ip_address character varying,
+    user_agent character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    email_address character varying NOT NULL,
+    password_digest character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
 -- Name: aact_mappings id; Type: DEFAULT; Schema: ctgov; Owner: -
 --
 
@@ -177,6 +242,20 @@ ALTER TABLE ONLY ctgov.api_metadata ALTER COLUMN id SET DEFAULT nextval('ctgov.a
 --
 
 ALTER TABLE ONLY public.aact_public_query_metrics ALTER COLUMN id SET DEFAULT nextval('public.aact_public_query_metrics_id_seq'::regclass);
+
+
+--
+-- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.sessions_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
@@ -220,6 +299,22 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: index_aact_mappings_on_api_metadata_id; Type: INDEX; Schema: ctgov; Owner: -
 --
 
@@ -241,11 +336,33 @@ CREATE UNIQUE INDEX index_aact_public_query_metrics_on_log_date_and_username ON 
 
 
 --
+-- Name: index_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sessions_on_user_id ON public.sessions USING btree (user_id);
+
+
+--
+-- Name: index_users_on_email_address; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_email_address ON public.users USING btree (email_address);
+
+
+--
 -- Name: aact_mappings fk_rails_a68c0de943; Type: FK CONSTRAINT; Schema: ctgov; Owner: -
 --
 
 ALTER TABLE ONLY ctgov.aact_mappings
     ADD CONSTRAINT fk_rails_a68c0de943 FOREIGN KEY (api_metadata_id) REFERENCES ctgov.api_metadata(id) ON DELETE SET NULL;
+
+
+--
+-- Name: sessions fk_rails_758836b4f0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sessions
+    ADD CONSTRAINT fk_rails_758836b4f0 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -255,6 +372,8 @@ ALTER TABLE ONLY ctgov.aact_mappings
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251001002824'),
+('20251001002823'),
 ('20250930134454'),
 ('20250930134453'),
 ('20250930134452'),
