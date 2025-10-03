@@ -1,0 +1,37 @@
+<div class="mx-auto max-w-4xl">
+  <% if authenticated? %>
+    <!-- Authenticated User Greeting -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">
+        Welcome back to AACT!
+      </h1>
+      <p class="text-xl text-gray-600 mb-6">
+        Hello <%= Current.user&.email_address || "there" %> 👋
+      </p>
+      <p class="text-sm text-gray-500">
+        Member since <%= Current.user&.created_at&.strftime("%B %Y") %>
+      </p>
+    </div>
+
+    <!-- Sign Out Button -->
+    <div class="text-center">
+      <%= button_to "Sign out", session_path, method: :delete, 
+            class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+    </div>
+
+  <% else %>
+    <!-- Generic Greeting -->
+    <div class="text-center">
+      <h1 class="text-5xl font-bold text-gray-900 mb-4">
+        Welcome to AACT
+      </h1>
+      <p class="text-xl text-gray-600 mb-8">
+        Aggregate Analysis of ClinicalTrials.gov
+      </p>
+
+      <!-- Sign In Button -->
+      <%= link_to "Sign In", new_session_path, 
+            class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+    </div>
+  <% end %>
+</div>
