@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Build Tailwind CSS for production
+bundle exec rails tailwindcss:build
+
+# Precompile all other assets
+bundle exec rails assets:precompile

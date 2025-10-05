@@ -43,7 +43,8 @@ COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-# Rails 8 with importmaps and Tailwind CSS only needs Rails asset compilation
+# Build Tailwind CSS first, then precompile all assets
+RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails tailwindcss:build
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 # Final stage for app image
