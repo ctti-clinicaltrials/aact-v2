@@ -2,6 +2,7 @@ require "sidekiq/web"
 
 Rails.application.routes.draw do
   # Authentication routes
+  resource :sign_up
   resource :session
   resources :passwords, param: :token
 
