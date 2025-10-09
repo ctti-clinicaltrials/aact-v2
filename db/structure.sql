@@ -202,7 +202,8 @@ CREATE TABLE public.users (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     username character varying,
-    name character varying
+    name character varying,
+    admin boolean DEFAULT false NOT NULL
 );
 
 
@@ -381,6 +382,7 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251009154958'),
 ('20251007131403'),
 ('20251001002824'),
 ('20251001002823'),
