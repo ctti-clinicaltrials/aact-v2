@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  # Admin routes
+  namespace :admin do
+    resources :users, only: [ :index ]
+  end
+
   # Root route
   root "home#index"
 
