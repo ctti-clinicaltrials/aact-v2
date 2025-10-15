@@ -7,11 +7,14 @@ class SignUpsController < ApplicationController
   end
 
   def create
-    @user = User.new(sign_up_params)
-    if @user.save
+    # Use service to create user in both primary and public databases
+    @user = DatabaseUserService.create_user_with_database_access(sign_up_params)
+
+    if @user&.persisted?
       start_new_session_for(@user)
       redirect_to root_path
     else
+      @user ||= User.new(sign_up_params)
       render :show, status: :unprocessable_entity
     end
   end
