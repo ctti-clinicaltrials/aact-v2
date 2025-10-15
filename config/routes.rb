@@ -2,8 +2,14 @@ require "sidekiq/web"
 
 Rails.application.routes.draw do
   # Authentication routes
+  resource :sign_up
   resource :session
   resources :passwords, param: :token
+
+  # Admin routes
+  namespace :admin do
+    resources :users, only: [ :index ]
+  end
 
   # Root route
   root "home#index"

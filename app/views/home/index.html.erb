@@ -6,7 +6,7 @@
         Welcome back to AACT!
       </h1>
       <p class="text-xl text-gray-600 mb-6">
-        Hello <%= Current.user&.email_address || "there" %> 👋
+        Hello <%= Current.user&.name || "there" %> 👋
       </p>
       <p class="text-sm text-gray-500">
         Member since <%= Current.user&.created_at&.strftime("%B %Y") %>
