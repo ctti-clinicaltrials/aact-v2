@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  # Database access setup routes (Step 2)
+  resource :database_access, only: [ :new, :create, :show ], controller: :database_access do
+    post :verify, on: :collection  # POST /database_access/verify for password verification
+  end
+
   # Admin routes
   namespace :admin do
     resources :users, only: [ :index ]
