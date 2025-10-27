@@ -6,9 +6,19 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  # Database access setup routes (Step 2)
-  resource :database_access, only: [ :new, :create, :show ], controller: :database_access do
-    post :verify, on: :collection  # POST /database_access/verify for password verification
+  # Database access setup routes (Step 2 - initial setup only)
+  resource :database_access, only: [ :new, :create ], controller: :database_access
+
+  # Settings routes
+  namespace :settings do
+    resource :profile, only: [ :show, :update ]
+    resource :password, only: [ :show, :update ]
+    resource :database_access, only: [ :show ] do
+      get :reveal_password, on: :collection
+      post :verify_password, on: :collection
+    end
+
+    root to: redirect("/settings/profile")
   end
 
   # Admin routes

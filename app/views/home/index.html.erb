@@ -13,55 +13,6 @@
       </p>
     </div>
 
-    <!-- Database Access Status -->
-    <div class="bg-white shadow rounded-lg p-6 mb-8">
-      <h2 class="text-lg font-medium text-gray-900 mb-4">Database Access</h2>
-      
-      <% if Current.user.has_database_credentials? %>
-        <div class="flex items-center text-green-600 mb-3">
-          <svg class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-          </svg>
-          <span class="font-medium">Database access is set up</span>
-        </div>
-        <p class="text-gray-600 mb-4">You have read-only access to the AACT public database.</p>
-        <div class="space-x-3">
-          <%= link_to "View Credentials", database_access_path,
-                class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-        </div>
-      <% else %>
-        <div class="flex items-center text-yellow-600 mb-3">
-          <svg class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-          </svg>
-          <span class="font-medium">Database access not set up</span>
-        </div>
-        
-        <div class="mb-4">
-          <p class="text-gray-600 mb-3">Set up direct database access to query the AACT public database with your own tools.</p>
-          
-          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-            <h4 class="font-medium text-blue-900 mb-2">What you'll get:</h4>
-            <ul class="text-sm text-blue-700 space-y-1">
-              <li><strong>Direct PostgreSQL access</strong> to clinical trials data</li>
-              <li><strong>Read-only credentials</strong> for secure access</li>
-              <li><strong>Use any SQL client</strong> (pgAdmin, Beekeeper, etc.)</li>
-              <li><strong>Full query capabilities</strong> on public datasets</li>
-            </ul>
-          </div>
-        </div>
-        
-        <%= link_to "Set Up Database Access", new_database_access_path,
-              class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-      <% end %>
-    </div>
-
-    <!-- Sign Out Button -->
-    <div class="text-center">
-      <%= button_to "Sign out", session_path, method: :delete, 
-            class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
-    </div>
-
   <% else %>
     <!-- Generic Greeting -->
     <div class="text-center">
@@ -71,10 +22,6 @@
       <p class="text-xl text-gray-600 mb-8">
         Aggregate Analysis of ClinicalTrials.gov
       </p>
-
-      <!-- Sign In Button -->
-      <%= link_to "Sign In", new_session_path, 
-            class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
     </div>
   <% end %>
 </div>

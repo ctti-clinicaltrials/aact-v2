@@ -2,7 +2,6 @@ class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
 
-  # Encrypted database credentials (password only - username needs to be checked for uniqueness)
   encrypts :database_password, deterministic: false
 
   attr_readonly :admin

@@ -1,0 +1,139 @@
+<% content_for :title, "Database Access" %>
+
+<%= render layout: "settings/layout" do %>
+  <div class="max-w-3xl">
+    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Database Access</h2>
+    
+    <% if @user.has_database_credentials? %>
+      <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-400">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-green-800">Database access is set up</h3>
+            <p class="mt-1 text-sm text-green-700">You have read-only access to the AACT public database.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Connection Information</h3>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Database Host:</label>
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded border border-gray-300">
+              <code class="text-sm text-gray-900">aact-db.ctti-clinicaltrials.org</code>
+              <button onclick="copyText('aact-db.ctti-clinicaltrials.org')" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Copy</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Port:</label>
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded border border-gray-300">
+              <code class="text-sm text-gray-900">5432</code>
+              <button onclick="copyText('5432')" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Copy</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Database Name:</label>
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded border border-gray-300">
+              <code class="text-sm text-gray-900">aact</code>
+              <button onclick="copyText('aact')" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Copy</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Username:</label>
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded border border-gray-300">
+              <code class="text-sm text-gray-900"><%= @user.database_username %></code>
+              <button onclick="copyText('<%= @user.database_username %>')" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Copy</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password:</label>
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded border border-gray-300">
+              <code class="text-sm text-gray-900">••••••••••••</code>
+              <%= link_to "Reveal", reveal_password_settings_database_access_path, class: "text-blue-600 hover:text-blue-700 text-sm font-medium" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h4 class="font-medium text-blue-900 mb-2">How to connect:</h4>
+        <ul class="text-sm text-blue-700 space-y-1">
+          <li>• Use any PostgreSQL client (pgAdmin, DBeaver, DataGrip, etc.)</li>
+          <li>• Enter the connection details above</li>
+          <li>• Your access is read-only for security</li>
+          <li>• Click "Reveal" to view your password (requires verification)</li>
+        </ul>
+      </div>
+
+    <% else %>
+      <div class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">Database access not set up</h3>
+            <p class="mt-1 text-sm text-yellow-700">Set up direct database access to query the AACT public database with your own tools.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+        <h3 class="font-medium text-blue-900 mb-3">What you'll get:</h3>
+        <ul class="text-sm text-blue-700 space-y-2">
+          <li class="flex items-start">
+            <svg class="h-5 w-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span><strong>Direct PostgreSQL access</strong> to clinical trials data</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="h-5 w-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span><strong>Read-only credentials</strong> for secure access</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="h-5 w-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span><strong>Use any SQL client</strong> (pgAdmin, Beekeeper, DBeaver, etc.)</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="h-5 w-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            <span><strong>Full query capabilities</strong> on public datasets</span>
+          </li>
+        </ul>
+      </div>
+
+      <%= link_to new_database_access_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+        <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        Set Up Database Access
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+
+<script>
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Copied');
+  });
+}
+</script>

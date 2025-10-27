@@ -7,38 +7,7 @@ class DatabaseAccessController < ApplicationController
 
     # Redirect if user already has credentials
     if @user.has_database_credentials?
-      redirect_to database_access_path, notice: "Database access is already set up. You can view your credentials below."
-    end
-  end
-
-  def show
-    @user = Current.user
-
-    unless @user.has_database_credentials?
-      redirect_to new_database_access_path, alert: "Please set up database access first."
-      nil
-    end
-
-    # Just show the password form on GET
-  end
-
-  def verify
-    @user = Current.user
-
-    unless @user.has_database_credentials?
-      redirect_to new_database_access_path, alert: "Please set up database access first."
-      return
-    end
-
-    # Handle password verification
-    if @user.authenticate(params[:password])
-      @database_username = @user.database_username
-      @database_password = @user.database_password
-      @show_credentials = true
-      render :show
-    else
-      flash.now[:alert] = "Invalid password."
-      render :show
+      redirect_to settings_database_access_path, notice: "Database access is already set up. You can view your credentials below."
     end
   end
 
@@ -73,7 +42,7 @@ class DatabaseAccessController < ApplicationController
 
       if result[:success]
         @user.update!(database_user_created: true)
-        redirect_to root_path, notice: "Database access has been set up successfully!"
+        redirect_to settings_database_access_path, notice: "Database access has been set up successfully!"
       else
         # Clear credentials if database user creation failed
         @user.update!(database_username: nil, database_password: nil)
@@ -85,11 +54,5 @@ class DatabaseAccessController < ApplicationController
       flash[:alert] = @user.errors.full_messages.join(", ")
       render :new
     end
-  end
-
-  private
-
-  def database_access_params
-    params.expect(user: [ :password ])
   end
 end
