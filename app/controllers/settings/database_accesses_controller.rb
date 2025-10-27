@@ -69,7 +69,7 @@ class Settings::DatabaseAccessesController < ApplicationController
     end
   end
 
-  def verify_password
+  def verify_account_password
     @user = Current.user
 
     unless @user.has_database_credentials?
