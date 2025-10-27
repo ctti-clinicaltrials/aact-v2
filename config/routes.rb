@@ -6,16 +6,13 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  # Database access setup routes (Step 2 - initial setup only)
-  resource :database_access, only: [ :new, :create ], controller: :database_access
-
   # Settings routes
   namespace :settings do
     resource :profile, only: [ :show, :update ]
     resource :password, only: [ :show, :update ]
-    resource :database_access, only: [ :show ] do
-      get :reveal_password, on: :collection
-      post :verify_password, on: :collection
+    resource :database_access, only: [ :show, :new, :create ] do
+      get :reveal_password, on: :collection  # Password reveal form
+      post :verify_password, on: :collection # Verify and show password
     end
 
     root to: redirect("/settings/profile")
