@@ -16,13 +16,6 @@ SET row_security = off;
 CREATE SCHEMA ctgov;
 
 
---
--- Name: ctgov_api; Type: SCHEMA; Schema: -; Owner: -
---
-
-CREATE SCHEMA ctgov_api;
-
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -201,9 +194,11 @@ CREATE TABLE public.users (
     password_digest character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    username character varying,
     name character varying,
-    admin boolean DEFAULT false NOT NULL
+    admin boolean DEFAULT false NOT NULL,
+    database_username character varying,
+    database_password character varying,
+    database_user_created boolean DEFAULT false NOT NULL
 );
 
 
@@ -353,13 +348,6 @@ CREATE UNIQUE INDEX index_users_on_email_address ON public.users USING btree (em
 
 
 --
--- Name: index_users_on_username; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (username);
-
-
---
 -- Name: aact_mappings fk_rails_a68c0de943; Type: FK CONSTRAINT; Schema: ctgov; Owner: -
 --
 
@@ -382,7 +370,6 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20251009154958'),
 ('20251007131403'),
 ('20251001002824'),
 ('20251001002823'),

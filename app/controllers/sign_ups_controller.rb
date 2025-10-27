@@ -7,14 +7,12 @@ class SignUpsController < ApplicationController
   end
 
   def create
-    # Use service to create user in both primary and public databases
-    @user = DatabaseUserService.create_user_with_database_access(sign_up_params)
+    @user = User.new(sign_up_params)
 
-    if @user&.persisted?
+    if @user.save
       start_new_session_for(@user)
-      redirect_to root_path
+      redirect_to settings_database_access_path, notice: "Welcome! Your account has been created. Set up database access to get started."
     else
-      @user ||= User.new(sign_up_params)
       render :show, status: :unprocessable_entity
     end
   end
@@ -22,6 +20,6 @@ class SignUpsController < ApplicationController
   private
 
   def sign_up_params
-    params.expect(user: [ :name, :username, :email_address, :password, :password_confirmation ])
+    params.expect(user: [ :name, :email_address, :password, :password_confirmation ])
   end
 end

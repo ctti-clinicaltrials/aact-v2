@@ -6,17 +6,22 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  # Settings routes
+  namespace :settings do
+    resource :profile, only: [ :show, :update ]
+    resource :password, only: [ :show, :update ]
+    resource :database_access, only: [ :show, :new, :create ] do
+      get :reveal_password, on: :collection
+      post :verify_account_password, on: :collection
+    end
+
+    root to: redirect("/settings/profile")
+  end
+
   # Admin routes
   namespace :admin do
     resources :users, only: [ :index ]
   end
-
-  # Root route
-  root "home#index"
-
-  mount Sidekiq::Web => "/sidekiq"
-
-  get "up" => "rails/health#show", as: :rails_health_check
 
   namespace :api do
     namespace :v1 do
@@ -42,6 +47,9 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+
+  mount Sidekiq::Web => "/sidekiq"
+  get "up" => "rails/health#show", as: :rails_health_check
+
+  root "home#index"
 end
