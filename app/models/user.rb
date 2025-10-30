@@ -1,5 +1,14 @@
 class User < ApplicationRecord
   has_secure_password
+
+  enum :database_creation_status, {
+    not_requested: "not_requested",
+    pending: "pending",
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, prefix: :db_creation
+
   has_many :sessions, dependent: :destroy
 
   encrypts :database_password, deterministic: false
@@ -12,9 +21,10 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :database_username, uniqueness: true, allow_blank: true
 
+  # TODO: review database_user_created field use-case; consider removing it
   # Check if database user has been created
   def database_user_created?
-    database_user_created == true
+    db_creation_completed?
   end
 
   # Check if user has database credentials

@@ -33,5 +33,8 @@ module Aact
     # Enable CSRF protection by default for all controllers
     config.action_controller.default_protect_from_forgery = true
     config.action_controller.forgery_protection_strategy = :exception
+
+    # Configure ActiveJob to use Sidekiq
+    config.active_job.queue_adapter = :sidekiq
   end
 end
