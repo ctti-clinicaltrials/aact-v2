@@ -2,9 +2,11 @@
 
 <%= render layout: "settings/layout" do %>
   <div class="max-w-3xl">
-    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Set Up Database Access</h2>
+    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Database Access</h2>
     
-    <div class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400">
+    <!-- Wrap form in matching Turbo Frame -->
+    <%= turbo_frame_tag "database_setup" do %>
+      <div class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400">
       <div class="flex">
         <div class="flex-shrink-0">
           <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
@@ -58,5 +60,7 @@
         </div>
       <% end %>
     </div>
+    
+    <% end %> <!-- End turbo_frame_tag -->
   </div>
 <% end %>

@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       post :verify_account_password, on: :collection
     end
 
-    root to: redirect("/settings/profile")
+    root to: redirect("/settings/database_access")
   end
 
   # Admin routes
