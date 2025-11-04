@@ -52,8 +52,8 @@ class Settings::DatabaseAccessesController < ApplicationController
       # Enqueue background job to create the database user
       CreateDatabaseUserJob.perform_later(@user.id)
 
-      # Redirect immediately - job will run in background
-      redirect_to settings_database_access_path, notice: "We're setting up your database access. This should only take a moment..."
+      # Render show template directly - Turbo will replace the form with the processing state
+      render :show
     else
       # Validation errors (e.g., username uniqueness)
       flash[:alert] = @user.errors.full_messages.join(", ")
