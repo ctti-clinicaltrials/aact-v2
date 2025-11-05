@@ -5,6 +5,8 @@ class Settings::DatabaseAccessesController < ApplicationController
     @user = Current.user
   end
 
+  # TODO: add validation for special characters in username/password
+  # TODO: enforce password complexity requirements
   def new
     # Show database access setup form for user to fill in their desired credentials
     @user = Current.user
@@ -33,26 +35,25 @@ class Settings::DatabaseAccessesController < ApplicationController
       render :new and return
     end
 
+    # check username in public database before kicking off bg job
+    # NEW: Check if username exists in PostgreSQL public database
+    if AactPublic::DatabaseUser.user_exists?(username)
+      flash[:alert] = "Username '#{username}' is already taken in database. Please choose a different username."
+      render :new and return
+    end
+
     # Store credentials (password encrypted, username plain text for uniqueness checks)
     @user.database_username = username
     @user.database_password = password
+    @user.database_creation_status = "pending"
+    @user.database_creation_attempted_at = Time.current
 
     if @user.save
-      # Create the database user
-      result = DatabaseUserService.create_database_user(
-        username: username,
-        password: password
-      )
+      # Enqueue background job to create the database user
+      CreateDatabaseUserJob.perform_later(@user.id)
 
-      if result[:success]
-        @user.update!(database_user_created: true)
-        redirect_to settings_database_access_path, notice: "Database access has been set up successfully!"
-      else
-        # Clear credentials if database user creation failed
-        @user.update!(database_username: nil, database_password: nil)
-        flash[:alert] = "Failed to set up database access: #{result[:error]}"
-        render :new
-      end
+      # Render show template directly - Turbo will replace the form with the processing state
+      render :show
     else
       # Validation errors (e.g., username uniqueness)
       flash[:alert] = @user.errors.full_messages.join(", ")

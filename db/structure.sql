@@ -198,7 +198,9 @@ CREATE TABLE public.users (
     admin boolean DEFAULT false NOT NULL,
     database_username character varying,
     database_password character varying,
-    database_user_created boolean DEFAULT false NOT NULL
+    database_creation_status character varying DEFAULT 'not_requested'::character varying NOT NULL,
+    database_creation_error text,
+    database_creation_attempted_at timestamp(6) without time zone
 );
 
 
@@ -341,6 +343,13 @@ CREATE INDEX index_sessions_on_user_id ON public.sessions USING btree (user_id);
 
 
 --
+-- Name: index_users_on_database_creation_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_database_creation_status ON public.users USING btree (database_creation_status);
+
+
+--
 -- Name: index_users_on_email_address; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -370,6 +379,7 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251028004756'),
 ('20251007131403'),
 ('20251001002824'),
 ('20251001002823'),

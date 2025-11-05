@@ -43,9 +43,8 @@ module AactPublic
         raise "read_only role does not exist in public database. Please set it up first."
       end
       raise
-    rescue => e
-      Rails.logger.error "Failed to create database user: #{e.message}"
-      false
+      # Removed the catch-all rescue that returned false
+      # Let all other exceptions bubble up to the job for proper error handling
     end
   end
 end
