@@ -52,7 +52,8 @@ class Settings::DatabaseAccessesController < ApplicationController
       # Enqueue background job to create the database user
       CreateDatabaseUserJob.perform_later(@user.id)
 
-      # Render show template directly - Turbo will replace the form with the processing state
+      # This automatically responds with turbo_stream format
+      # Rails looks for show.turbo_stream.erb first, falls back to show.html.erb
       render :show
     else
       # Validation errors (e.g., username uniqueness)
