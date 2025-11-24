@@ -52,39 +52,13 @@ class Settings::DatabaseAccessesController < ApplicationController
       # Enqueue background job to create the database user
       CreateDatabaseUserJob.perform_later(@user.id)
 
-      # Render show template directly - Turbo will replace the form with the processing state
+      # This automatically responds with turbo_stream format
+      # Rails looks for show.turbo_stream.erb first, falls back to show.html.erb
       render :show
     else
       # Validation errors (e.g., username uniqueness)
       flash[:alert] = @user.errors.full_messages.join(", ")
       render :new
-    end
-  end
-
-  def reveal_password
-    @user = Current.user
-
-    unless @user.has_database_credentials?
-      redirect_to settings_database_access_path, alert: "Database access not set up."
-      nil
-    end
-  end
-
-  def verify_account_password
-    @user = Current.user
-
-    unless @user.has_database_credentials?
-      redirect_to settings_database_access_path, alert: "Database access not set up."
-      return
-    end
-
-    if @user.authenticate(params[:password])
-      @database_password = @user.database_password
-      @password_revealed = true
-      render :reveal_password
-    else
-      flash.now[:alert] = "Invalid password."
-      render :reveal_password
     end
   end
 end

@@ -6,14 +6,16 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  # Turbo Streams test page
+  get "turbo-test", to: "turbo_test#index", as: :turbo_test
+  post "turbo-test/broadcast", to: "turbo_test#broadcast", as: :turbo_test_broadcast
+  delete "turbo-test", to: "turbo_test#index"
+
   # Settings routes
   namespace :settings do
     resource :profile, only: [ :show, :update ]
     resource :password, only: [ :show, :update ]
-    resource :database_access, only: [ :show, :new, :create ] do
-      get :reveal_password, on: :collection
-      post :verify_account_password, on: :collection
-    end
+    resource :database_access, only: [ :show, :new, :create ]
 
     root to: redirect("/settings/database_access")
   end
@@ -49,7 +51,9 @@ Rails.application.routes.draw do
 
 
   mount Sidekiq::Web => "/sidekiq"
+  mount ActionCable.server => "/cable"
   get "up" => "rails/health#show", as: :rails_health_check
+
 
   root "home#index"
 end

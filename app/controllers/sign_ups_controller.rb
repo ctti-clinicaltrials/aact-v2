@@ -11,8 +11,9 @@ class SignUpsController < ApplicationController
 
     if @user.save
       start_new_session_for(@user)
-      redirect_to root_path, notice: "Welcome! Your account has been created successfully."
+      redirect_to settings_database_access_path, notice: "Welcome! Your account has been created successfully."
     else
+      flash.now[:alert] = @user.errors.full_messages.join(", ")
       render :show, status: :unprocessable_entity
     end
   end

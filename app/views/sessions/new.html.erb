@@ -1,5 +1,5 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Sign in</h1>
+<%= render layout: "auth/layout" do %>
+  <h1 class="font-bold text-4xl mb-6">Sign in</h1>
 
   <%= form_with url: session_url, class: "contents" do |form| %>
     <div class="my-5">
@@ -19,9 +19,5 @@
         <%= link_to "Forgot password?", new_password_path, class: "text-gray-700 underline hover:no-underline" %>
       </div>
     </div>
-
-    <div class="mt-4 text-sm text-gray-500">
-      <%= link_to "Don't have an account? Sign up", sign_up_path, class: "text-gray-700 underline hover:no-underline" %>
-    </div>
   <% end %>
-</div>
+<% end %>
