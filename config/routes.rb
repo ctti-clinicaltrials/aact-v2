@@ -15,10 +15,7 @@ Rails.application.routes.draw do
   namespace :settings do
     resource :profile, only: [ :show, :update ]
     resource :password, only: [ :show, :update ]
-    resource :database_access, only: [ :show, :new, :create ] do
-      get :reveal_password, on: :collection
-      post :verify_account_password, on: :collection
-    end
+    resource :database_access, only: [ :show, :new, :create ]
 
     root to: redirect("/settings/database_access")
   end
