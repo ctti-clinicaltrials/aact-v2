@@ -26,6 +26,8 @@ gem "jbuilder"
 gem "sidekiq"
 
 gem "tailwindcss-rails"
+# Pagination [https://github.com/ddnexus/pagy]
+gem "pagy"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
