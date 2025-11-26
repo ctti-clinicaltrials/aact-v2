@@ -143,6 +143,48 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: documentation_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.documentation_items (
+    id bigint NOT NULL,
+    active boolean DEFAULT true,
+    table_name character varying NOT NULL,
+    column_name character varying NOT NULL,
+    data_type character varying,
+    nullable boolean,
+    description text,
+    ctgov_name character varying,
+    ctgov_label character varying,
+    ctgov_path character varying,
+    ctgov_section character varying,
+    ctgov_module character varying,
+    ctgov_url character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: documentation_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.documentation_items_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: documentation_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.documentation_items_id_seq OWNED BY public.documentation_items.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -182,6 +224,38 @@ CREATE SEQUENCE public.sessions_id_seq
 --
 
 ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
+
+
+--
+-- Name: solid_cable_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.solid_cable_messages (
+    id bigint NOT NULL,
+    channel bytea NOT NULL,
+    payload bytea NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    channel_hash bigint NOT NULL
+);
+
+
+--
+-- Name: solid_cable_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.solid_cable_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: solid_cable_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.solid_cable_messages_id_seq OWNED BY public.solid_cable_messages.id;
 
 
 --
@@ -245,10 +319,24 @@ ALTER TABLE ONLY public.aact_public_query_metrics ALTER COLUMN id SET DEFAULT ne
 
 
 --
+-- Name: documentation_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.documentation_items ALTER COLUMN id SET DEFAULT nextval('public.documentation_items_id_seq'::regclass);
+
+
+--
 -- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.sessions_id_seq'::regclass);
+
+
+--
+-- Name: solid_cable_messages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.solid_cable_messages ALTER COLUMN id SET DEFAULT nextval('public.solid_cable_messages_id_seq'::regclass);
 
 
 --
@@ -291,6 +379,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: documentation_items documentation_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.documentation_items
+    ADD CONSTRAINT documentation_items_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -304,6 +400,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: solid_cable_messages solid_cable_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.solid_cable_messages
+    ADD CONSTRAINT solid_cable_messages_pkey PRIMARY KEY (id);
 
 
 --
@@ -336,10 +440,52 @@ CREATE UNIQUE INDEX index_aact_public_query_metrics_on_log_date_and_username ON 
 
 
 --
+-- Name: index_documentation_items_on_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_documentation_items_on_active ON public.documentation_items USING btree (active);
+
+
+--
+-- Name: index_documentation_items_on_table_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_documentation_items_on_table_name ON public.documentation_items USING btree (table_name);
+
+
+--
+-- Name: index_documentation_items_on_table_name_and_column_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_documentation_items_on_table_name_and_column_name ON public.documentation_items USING btree (table_name, column_name);
+
+
+--
 -- Name: index_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sessions_on_user_id ON public.sessions USING btree (user_id);
+
+
+--
+-- Name: index_solid_cable_messages_on_channel; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_solid_cable_messages_on_channel ON public.solid_cable_messages USING btree (channel);
+
+
+--
+-- Name: index_solid_cable_messages_on_channel_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_solid_cable_messages_on_channel_hash ON public.solid_cable_messages USING btree (channel_hash);
+
+
+--
+-- Name: index_solid_cable_messages_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_solid_cable_messages_on_created_at ON public.solid_cable_messages USING btree (created_at);
 
 
 --
@@ -379,6 +525,7 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251126135835'),
 ('20251028004756'),
 ('20251007131403'),
 ('20251001002824'),
@@ -389,5 +536,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250601000000'),
 ('20241013183335'),
 ('20241004010026'),
-('20241003191112');
+('20241003191112'),
+('1');
 
