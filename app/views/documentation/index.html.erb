@@ -1,0 +1,149 @@
+<div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">AACT Documentation</h1>
+  </div>
+
+  <%= turbo_frame_tag "documentation_search" do %>
+    <!-- Search and Filters -->
+    <div class="mb-6 bg-white p-4 rounded-lg shadow">
+      <%= form_with url: documentation_index_path, method: :get, data: { turbo_frame: "documentation_results", turbo_action: "advance" } do |f| %>
+        <div class="flex gap-4 items-end">
+          <div class="flex-1">
+            <%= f.label :search, "Search", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.text_field :search,
+                value: params[:search],
+                placeholder: "Search table, column, type, or description...",
+                class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                data: { clear_search_target: "input" } %>
+          </div>
+          <div class="flex gap-2">
+            <%= f.submit "Search", class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer" %>
+            <%# Clear button: Only clears search input, preserves table filters.
+                Uses inline JS to avoid a dedicated controller for a single function.
+                Consider moving to a documentation_controller.js if more inline behaviors accumulate. %>
+            <button type="button"
+                    onclick="const form = this.closest('form'); const input = form.querySelector('input[name=search]'); input.value = ''; form.requestSubmit();"
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Table Filter -->
+        <div class="mt-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Filter by Tables</label>
+          <div data-controller="multiselect"
+               data-multiselect-options-value="<%= @tables.to_json %>"
+               data-multiselect-selected-value="<%= (params[:table] || []).to_json %>"
+               data-multiselect-placeholder-value="Select tables..."
+               data-multiselect-name-value="table[]"
+               data-multiselect-submit-on-change-value="true"
+               class="relative">
+
+            <!-- Hidden inputs container -->
+            <div data-multiselect-target="input"></div>
+
+            <!-- Trigger button with tags -->
+            <button type="button"
+                    data-action="multiselect#toggle"
+                    class="w-full min-h-[42px] px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <div data-multiselect-target="tags" class="flex flex-wrap gap-1"></div>
+            </button>
+
+            <!-- Dropdown -->
+            <div data-multiselect-target="dropdown"
+                 class="hidden absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-hidden">
+              <!-- Search -->
+              <div class="p-2 border-b border-gray-200">
+                <input type="text"
+                       data-multiselect-target="search"
+                       data-action="input->multiselect#filter"
+                       placeholder="Search..."
+                       class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500">
+              </div>
+              <!-- Options -->
+              <div class="overflow-y-auto max-h-48">
+                <% @tables.each do |table| %>
+                  <button type="button"
+                          data-option
+                          data-value="<%= table %>"
+                          data-action="multiselect#select"
+                          class="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none">
+                    <%= table %>
+                  </button>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= turbo_frame_tag "documentation_results" do %>
+    <!-- Results Header with Download -->
+    <div class="mb-4 flex justify-between items-center">
+      <p class="text-sm text-gray-600">
+        <%== @pagy.info_tag %>
+      </p>
+      <%= link_to download_csv_documentation_index_path(search: params[:search], table: params[:table], active: params[:active]),
+                  class: "inline-flex items-center px-3 py-1.5 text-sm bg-green-600 text-white rounded-md hover:bg-green-700",
+                  data: { turbo: false } do %>
+        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        Download CSV
+      <% end %>
+    </div>
+    <!-- Results Table -->
+    <div class="bg-white shadow overflow-hidden rounded-lg overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Active</th>
+            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Table</th>
+            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Column</th>
+            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nullable</th>
+            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CTGov Data Point</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @documentation.each do |doc| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-900">
+                <% if doc.active %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Yes</span>
+                <% else %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">No</span>
+                <% end %>
+              </td>
+              <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= doc.table_name %></td>
+              <td class="px-3 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800">
+                <%= link_to doc.column_name, documentation_path(doc.id), class: "hover:underline", data: { turbo_frame: "_top" } %>
+              </td>
+              <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= doc.data_type %></td>
+              <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= doc.nullable ? "Yes" : "No" %></td>
+              <td class="px-3 py-4 text-sm text-gray-500 max-w-md truncate"><%= doc.description || "-" %></td>
+              <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
+                <% if doc.ctgov_url.present? %>
+                  <%= link_to doc.ctgov_label, doc.ctgov_url, target: "_blank", class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                <% elsif doc.ctgov_label.present? %>
+                  <%= doc.ctgov_label %>
+                <% else %>
+                  -
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-center">
+      <%== @pagy.series_nav if @pagy %>
+    </div>
+  <% end %>
+</div>

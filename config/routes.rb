@@ -20,6 +20,13 @@ Rails.application.routes.draw do
     root to: redirect("/settings/database_access")
   end
 
+  # Documentation routes
+  resources :documentation, only: [ :index, :show ] do
+    collection do
+      get :download_csv
+    end
+  end
+
   # Admin routes
   namespace :admin do
     resources :users, only: [ :index ]

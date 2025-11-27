@@ -1,0 +1,59 @@
+@layer components {
+  .pagy {
+    --B: 1;
+    --H: 0;
+    --S: 0;
+    --L: 50;
+    /* --spacing: 0.125rem; */
+    --padding: 0.75rem;
+    --rounding: 1.75rem;
+    --border-width: 0rem;
+    --font-size: 0.875rem;
+    --font-weight: 600;
+    --line-height: 1.75;
+
+    --text: hsl(var(--H) var(--S) calc(var(--L) - (30 * var(--B))));
+    --text-hover: hsl(var(--H) var(--S) calc(var(--L) - (33 * var(--B))));
+    --text-current: hsl(var(--H) var(--S) calc(100 * (var(--B) + 1)));
+    --background: hsl(var(--H) var(--S) calc(var(--L) + (30 * var(--B))));
+    --background-hover: hsl(var(--H) var(--S) calc(var(--L) + (20 * var(--B))));
+    --background-current: hsl(var(--H) var(--S) var(--L));
+    --background-input: hsl(var(--H) var(--S) calc(var(--L) + (45 * var(--B))));
+    --opacity: 1;
+
+    @apply flex space-x-1 font-(--font-weight) text-(length:--font-size) text-(--text) leading-(--line-height);
+
+    a:not([role="separator"]) {
+      /* all but gaps */
+      @apply block rounded-(--rounding) px-(--padding) py-[calc(var(--padding)/3)] bg-(--background) border-solid border-(--background-current) border-(length:--border-width) opacity-(--opacity);
+    }
+
+    a[href]:hover {
+      /* all links on hover */
+      @apply bg-(--background-hover) text-(--text-hover);
+    }
+
+    a:not([href]) {
+      /* all but links */
+      @apply cursor-default
+    }
+
+    a[role="link"]:not([aria-current]) {
+      /* disabled links */
+      @apply opacity-[calc(var(--opacity)*.6)];
+    }
+
+    a[aria-current] {
+      /* current page */
+      @apply bg-(--background-current) text-(--text-current);
+    }
+
+    label {
+      @apply inline-block whitespace-nowrap rounded-(--rounding) px-(--padding) py-[calc(var(--padding)/3-var(--border-width))] bg-(--background) border-solid border-(length:--border-width) border-(--background-current);
+
+      input {
+        @apply text-(--text) text-(length:--font-size) leading-(--line-height) rounded-[calc(var(--rounding)/2)] font-(--font-weight) bg-(--background-input) border-(length:--border-width) border-(--background-current);
+      }
+    }
+  }
+}
