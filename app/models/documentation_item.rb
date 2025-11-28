@@ -1,4 +1,6 @@
 class DocumentationItem < ApplicationRecord
+  CACHE_KEY_TABLE_NAMES = "documentation_table_names".freeze
+
   scope :search, ->(term) {
     return all if term.blank?
     where(
@@ -11,8 +13,14 @@ class DocumentationItem < ApplicationRecord
   scope :by_table, ->(table) { where(table_name: table) if table.present? }
   scope :by_active, ->(active) { where(active: active) unless active.nil? }
 
-  # Get unique table names for dropdown
+  # Get unique table names for dropdown (cached)
   def self.table_names
-    distinct.order(:table_name).pluck(:table_name)
+    Rails.cache.fetch(CACHE_KEY_TABLE_NAMES) do
+      distinct.order(:table_name).pluck(:table_name)
+    end
+  end
+
+  def self.clear_table_names_cache
+    Rails.cache.delete(CACHE_KEY_TABLE_NAMES)
   end
 end

@@ -13,6 +13,10 @@ class SyncDocumentationJob < ApplicationJob
       DocumentationItem.insert_all(records) if records.any?
     end
 
+    # Clear cached table names since data has changed
+    # NOTE: If DocumentationItem caching strategy changes, update this accordingly
+    DocumentationItem.clear_table_names_cache
+
     Rails.logger.info "Documentation sync complete: #{records.size} records"
   end
 

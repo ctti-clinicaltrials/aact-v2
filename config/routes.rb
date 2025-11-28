@@ -6,11 +6,6 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  # Turbo Streams test page
-  get "turbo-test", to: "turbo_test#index", as: :turbo_test
-  post "turbo-test/broadcast", to: "turbo_test#broadcast", as: :turbo_test_broadcast
-  delete "turbo-test", to: "turbo_test#index"
-
   # Settings routes
   namespace :settings do
     resource :profile, only: [ :show, :update ]
