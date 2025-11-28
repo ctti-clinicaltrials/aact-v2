@@ -1,13 +1,16 @@
 class DocumentationController < ApplicationController
   def index
     scope = DocumentationItem
-      .search(params[:search])
+      .search(search_param)
       .by_table(params[:table])
       .by_active(params[:active])
       .order(:table_name, :column_name)
 
     @pagy, @documentation = pagy(scope, limit: 20)
     @tables = DocumentationItem.table_names
+
+    # Render only the results for Turbo Frame requests (smaller response)
+    render :results if turbo_frame_request?
   end
 
   def show
@@ -20,7 +23,7 @@ class DocumentationController < ApplicationController
 
   def download_csv
     scope = DocumentationItem
-      .search(params[:search])
+      .search(search_param)
       .by_table(params[:table])
       .by_active(params[:active])
       .order(:table_name, :column_name)
@@ -35,6 +38,10 @@ class DocumentationController < ApplicationController
   end
 
   private
+
+  def search_param
+    params[:search]&.strip&.slice(0, 100)
+  end
 
   def generate_csv(docs)
     require "csv"
