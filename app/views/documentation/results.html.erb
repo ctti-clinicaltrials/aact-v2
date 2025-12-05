@@ -26,6 +26,8 @@
           <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
           <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nullable</th>
           <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+          <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CTGov Section</th>
+          <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CTGov Module</th>
           <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CTGov Data Point</th>
         </tr>
       </thead>
@@ -40,12 +42,12 @@
               <% end %>
             </td>
             <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= doc.table_name %></td>
-            <td class="px-3 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800">
-              <%= link_to doc.column_name, documentation_path(doc.id), class: "hover:underline", data: { turbo_frame: "_top" } %>
-            </td>
+            <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-900"><%= doc.column_name %></td>
             <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= doc.data_type %></td>
             <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= doc.nullable ? "Yes" : "No" %></td>
             <td class="px-3 py-4 text-sm text-gray-500 max-w-md truncate"><%= doc.description || "-" %></td>
+            <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= doc.ctgov_section || "-" %></td>
+            <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= doc.ctgov_module || "-" %></td>
             <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
               <% if doc.ctgov_url.present? %>
                 <%= link_to doc.ctgov_label, doc.ctgov_url, target: "_blank", class: "text-blue-600 hover:text-blue-800 hover:underline" %>

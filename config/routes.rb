@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   end
 
   # Documentation routes
-  resources :documentation, only: [ :index, :show ] do
+  resources :documentation, only: [ :index ] do
     collection do
       get :download_csv
     end

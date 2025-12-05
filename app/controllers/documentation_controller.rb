@@ -13,14 +13,6 @@ class DocumentationController < ApplicationController
     render :results if turbo_frame_request?
   end
 
-  def show
-    @doc_item = DocumentationItem.find_by(id: params[:id])
-
-    if @doc_item.nil?
-      redirect_to documentation_index_path, alert: "Documentation item not found"
-    end
-  end
-
   def download_csv
     scope = DocumentationItem
       .search(search_param)
