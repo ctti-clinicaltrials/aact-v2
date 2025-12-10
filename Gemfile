@@ -29,6 +29,11 @@ gem "tailwindcss-rails"
 # Pagination [https://github.com/ddnexus/pagy]
 gem "pagy"
 
+# HTTP client for API requests
+gem "faraday", "~> 2.7"
+gem "faraday-retry"
+gem "faraday-typhoeus"  # HTTP/2 support
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
