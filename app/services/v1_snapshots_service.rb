@@ -67,29 +67,26 @@ class V1SnapshotsService
   end
 
   def fetch_monthly_snapshots_by_year(db_type)
-    records = Aact::Snapshot.where(file_type: db_type).order(created_at: :desc)
-    
+    records = Aact::Snapshot.where(file_type: db_type).order(created_at: :asc)
+
     api_type = SNAPSHOT_TYPES.find { |t| Aact::Snapshot::TYPE_MAPPING[t] == db_type }
-    
-    # Group by year and month, keeping track of months we've seen
+
+    # Group by month and select the 1st day snapshot (or earliest if none)
     monthly_by_year = {}
-    seen_months = Set.new
-    
-    records.each do |record|
-      year = record.created_at.year.to_s
-      month_key = record.created_at.strftime("%Y-%m")
-      
-      # skip if we already have a snapshot for this month
-      next if seen_months.include?(month_key)
-      seen_months.add(month_key)
-      
+
+    records.group_by { |r| r.created_at.strftime("%Y-%m") }.each do |month_key, month_records|
+      # Prefer snapshot from the 1st day of the month, fallback to earliest
+      target_record = month_records.find { |r| r.created_at.day == 1 } || month_records.first
+
+      year = target_record.created_at.year.to_s
+
       monthly_by_year[year] ||= []
       monthly_by_year[year] << {
         type: api_type,
-        date: record.created_at.strftime("%m-%d-%Y"),
-        file_name: record.filename,
-        download_url: record.url,
-        size: format_size(record.file_size)
+        date: target_record.created_at.strftime("%m-%d-%Y"),
+        file_name: target_record.filename,
+        download_url: target_record.url,
+        size: format_size(target_record.file_size)
       }
     end
     
