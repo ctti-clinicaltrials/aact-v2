@@ -38,8 +38,9 @@
 
               <% if Current.user&.admin? %>
                 <%= link_to "Admin", admin_users_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
+                <%= link_to "CTGov", admin_ctgov_metadata_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
               <% end %>
-              
+
               <%= link_to "Settings", settings_root_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
             <% else %>
               <%= link_to "Sign In", new_session_path, 
