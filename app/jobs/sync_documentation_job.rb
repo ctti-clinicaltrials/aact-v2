@@ -23,10 +23,10 @@ class SyncDocumentationJob < ApplicationJob
   private
 
   def build_all_records
-    # Fetch all from external DB (one-time load)
+    # Fetch schema and mappings from external DB, metadata from local v2
     schemas = Ctgov::V1Schema.all
     mappings = Ctgov::V1Mapping.all.index_by { |m| [ m.table_name, m.field_name ] }
-    metadata = Ctgov::V1ApiMetadata.all.index_by(&:path)
+    metadata = CtgovMetadata.active.all.index_by(&:path)  # Using v2's local metadata
 
     now = Time.current
 
@@ -40,13 +40,13 @@ class SyncDocumentationJob < ApplicationJob
         column_name: schema.column_name,
         data_type: schema.data_type,
         nullable: schema.nullable,
-        description: schema.description,
+        description: meta&.description,  # Now from CTGov API metadata
         ctgov_name: meta&.name,
-        ctgov_label: meta&.formatted_piece,
+        ctgov_label: meta&.piece,        # Using piece directly
         ctgov_path: meta&.path,
-        ctgov_section: meta&.ctgov_section,
-        ctgov_module: meta&.ctgov_module,
-        ctgov_url: meta&.url,
+        ctgov_section: meta&.section,    # Method on CTGovMetadata
+        ctgov_module: meta&.module_name, # Method on CTGovMetadata
+        ctgov_url: meta&.ded_link_url,   # Changed from url
         created_at: now,
         updated_at: now
       }

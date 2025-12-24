@@ -16,85 +16,16 @@ SET row_security = off;
 CREATE SCHEMA ctgov;
 
 
+--
+-- Name: snapshots; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA snapshots;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
-
---
--- Name: aact_mappings; Type: TABLE; Schema: ctgov; Owner: -
---
-
-CREATE TABLE ctgov.aact_mappings (
-    id bigint NOT NULL,
-    table_name character varying,
-    field_name character varying,
-    active boolean DEFAULT true,
-    api_path character varying,
-    api_metadata_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: aact_mappings_id_seq; Type: SEQUENCE; Schema: ctgov; Owner: -
---
-
-CREATE SEQUENCE ctgov.aact_mappings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: aact_mappings_id_seq; Type: SEQUENCE OWNED BY; Schema: ctgov; Owner: -
---
-
-ALTER SEQUENCE ctgov.aact_mappings_id_seq OWNED BY ctgov.aact_mappings.id;
-
-
---
--- Name: api_metadata; Type: TABLE; Schema: ctgov; Owner: -
---
-
-CREATE TABLE ctgov.api_metadata (
-    id bigint NOT NULL,
-    version character varying,
-    name character varying,
-    data_type character varying,
-    piece character varying,
-    source_type character varying,
-    synonyms boolean,
-    label character varying,
-    url character varying,
-    section character varying,
-    module character varying,
-    path character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: api_metadata_id_seq; Type: SEQUENCE; Schema: ctgov; Owner: -
---
-
-CREATE SEQUENCE ctgov.api_metadata_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: api_metadata_id_seq; Type: SEQUENCE OWNED BY; Schema: ctgov; Owner: -
---
-
-ALTER SEQUENCE ctgov.api_metadata_id_seq OWNED BY ctgov.api_metadata.id;
-
 
 --
 -- Name: aact_public_query_metrics; Type: TABLE; Schema: public; Owner: -
@@ -140,6 +71,52 @@ CREATE TABLE public.ar_internal_metadata (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: ctgov_metadata; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ctgov_metadata (
+    id bigint NOT NULL,
+    path character varying NOT NULL,
+    name character varying NOT NULL,
+    piece character varying,
+    title character varying,
+    source_type character varying NOT NULL,
+    type character varying,
+    is_enum boolean,
+    max_chars integer,
+    description text,
+    rules text,
+    synonyms boolean,
+    alt_piece_names text[] DEFAULT '{}'::text[],
+    ded_link_label character varying,
+    ded_link_url text,
+    active boolean DEFAULT true NOT NULL,
+    api_version character varying DEFAULT '2'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ctgov_metadata_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ctgov_metadata_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ctgov_metadata_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ctgov_metadata_id_seq OWNED BY public.ctgov_metadata.id;
 
 
 --
@@ -298,17 +275,37 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: aact_mappings id; Type: DEFAULT; Schema: ctgov; Owner: -
+-- Name: ctgov_metadata; Type: TABLE; Schema: snapshots; Owner: -
 --
 
-ALTER TABLE ONLY ctgov.aact_mappings ALTER COLUMN id SET DEFAULT nextval('ctgov.aact_mappings_id_seq'::regclass);
+CREATE TABLE snapshots.ctgov_metadata (
+    id bigint NOT NULL,
+    api_version character varying DEFAULT '2'::character varying NOT NULL,
+    snapshot jsonb NOT NULL,
+    field_count integer,
+    checksum text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
 
 
 --
--- Name: api_metadata id; Type: DEFAULT; Schema: ctgov; Owner: -
+-- Name: ctgov_metadata_id_seq; Type: SEQUENCE; Schema: snapshots; Owner: -
 --
 
-ALTER TABLE ONLY ctgov.api_metadata ALTER COLUMN id SET DEFAULT nextval('ctgov.api_metadata_id_seq'::regclass);
+CREATE SEQUENCE snapshots.ctgov_metadata_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ctgov_metadata_id_seq; Type: SEQUENCE OWNED BY; Schema: snapshots; Owner: -
+--
+
+ALTER SEQUENCE snapshots.ctgov_metadata_id_seq OWNED BY snapshots.ctgov_metadata.id;
 
 
 --
@@ -316,6 +313,13 @@ ALTER TABLE ONLY ctgov.api_metadata ALTER COLUMN id SET DEFAULT nextval('ctgov.a
 --
 
 ALTER TABLE ONLY public.aact_public_query_metrics ALTER COLUMN id SET DEFAULT nextval('public.aact_public_query_metrics_id_seq'::regclass);
+
+
+--
+-- Name: ctgov_metadata id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ctgov_metadata ALTER COLUMN id SET DEFAULT nextval('public.ctgov_metadata_id_seq'::regclass);
 
 
 --
@@ -347,19 +351,10 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Name: aact_mappings aact_mappings_pkey; Type: CONSTRAINT; Schema: ctgov; Owner: -
+-- Name: ctgov_metadata id; Type: DEFAULT; Schema: snapshots; Owner: -
 --
 
-ALTER TABLE ONLY ctgov.aact_mappings
-    ADD CONSTRAINT aact_mappings_pkey PRIMARY KEY (id);
-
-
---
--- Name: api_metadata api_metadata_pkey; Type: CONSTRAINT; Schema: ctgov; Owner: -
---
-
-ALTER TABLE ONLY ctgov.api_metadata
-    ADD CONSTRAINT api_metadata_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY snapshots.ctgov_metadata ALTER COLUMN id SET DEFAULT nextval('snapshots.ctgov_metadata_id_seq'::regclass);
 
 
 --
@@ -376,6 +371,14 @@ ALTER TABLE ONLY public.aact_public_query_metrics
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: ctgov_metadata ctgov_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ctgov_metadata
+    ADD CONSTRAINT ctgov_metadata_pkey PRIMARY KEY (id);
 
 
 --
@@ -419,17 +422,11 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: index_aact_mappings_on_api_metadata_id; Type: INDEX; Schema: ctgov; Owner: -
+-- Name: ctgov_metadata ctgov_metadata_pkey; Type: CONSTRAINT; Schema: snapshots; Owner: -
 --
 
-CREATE INDEX index_aact_mappings_on_api_metadata_id ON ctgov.aact_mappings USING btree (api_metadata_id);
-
-
---
--- Name: index_aact_mappings_on_table_field_api_path; Type: INDEX; Schema: ctgov; Owner: -
---
-
-CREATE UNIQUE INDEX index_aact_mappings_on_table_field_api_path ON ctgov.aact_mappings USING btree (table_name, field_name, api_path);
+ALTER TABLE ONLY snapshots.ctgov_metadata
+    ADD CONSTRAINT ctgov_metadata_pkey PRIMARY KEY (id);
 
 
 --
@@ -437,6 +434,48 @@ CREATE UNIQUE INDEX index_aact_mappings_on_table_field_api_path ON ctgov.aact_ma
 --
 
 CREATE UNIQUE INDEX index_aact_public_query_metrics_on_log_date_and_username ON public.aact_public_query_metrics USING btree (log_date, username);
+
+
+--
+-- Name: index_ctgov_metadata_on_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ctgov_metadata_on_active ON public.ctgov_metadata USING btree (active);
+
+
+--
+-- Name: index_ctgov_metadata_on_alt_piece_names; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ctgov_metadata_on_alt_piece_names ON public.ctgov_metadata USING gin (alt_piece_names);
+
+
+--
+-- Name: index_ctgov_metadata_on_api_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ctgov_metadata_on_api_version ON public.ctgov_metadata USING btree (api_version);
+
+
+--
+-- Name: index_ctgov_metadata_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ctgov_metadata_on_name ON public.ctgov_metadata USING btree (name);
+
+
+--
+-- Name: index_ctgov_metadata_on_path; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ctgov_metadata_on_path ON public.ctgov_metadata USING btree (path);
+
+
+--
+-- Name: index_ctgov_metadata_on_source_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ctgov_metadata_on_source_type ON public.ctgov_metadata USING btree (source_type);
 
 
 --
@@ -503,11 +542,24 @@ CREATE UNIQUE INDEX index_users_on_email_address ON public.users USING btree (em
 
 
 --
--- Name: aact_mappings fk_rails_a68c0de943; Type: FK CONSTRAINT; Schema: ctgov; Owner: -
+-- Name: index_ctgov_metadata_on_api_version; Type: INDEX; Schema: snapshots; Owner: -
 --
 
-ALTER TABLE ONLY ctgov.aact_mappings
-    ADD CONSTRAINT fk_rails_a68c0de943 FOREIGN KEY (api_metadata_id) REFERENCES ctgov.api_metadata(id) ON DELETE SET NULL;
+CREATE INDEX index_ctgov_metadata_on_api_version ON snapshots.ctgov_metadata USING btree (api_version);
+
+
+--
+-- Name: index_ctgov_metadata_on_checksum; Type: INDEX; Schema: snapshots; Owner: -
+--
+
+CREATE INDEX index_ctgov_metadata_on_checksum ON snapshots.ctgov_metadata USING btree (checksum);
+
+
+--
+-- Name: index_ctgov_metadata_on_created_at; Type: INDEX; Schema: snapshots; Owner: -
+--
+
+CREATE INDEX index_ctgov_metadata_on_created_at ON snapshots.ctgov_metadata USING btree (created_at);
 
 
 --
@@ -525,6 +577,7 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251209120000'),
 ('20251126135835'),
 ('20251028004756'),
 ('20251007131403'),
