@@ -1,0 +1,191 @@
+<div class="mx-auto max-w-6xl">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Compare Metadata Snapshots</h1>
+    <p class="text-gray-600">Comparing changes between two snapshots</p>
+  </div>
+
+  <!-- Snapshot Info Cards -->
+  <div class="grid grid-cols-2 gap-4 mb-8">
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <h3 class="text-sm font-semibold text-blue-900 mb-2">Snapshot (Oldest)</h3>
+      <dl class="text-sm">
+        <div class="flex justify-between py-1">
+          <dt class="text-blue-700">Created:</dt>
+          <dd class="text-blue-900 font-medium"><%= @snapshot_a.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+        </div>
+        <div class="flex justify-between py-1">
+          <dt class="text-blue-700">Fields:</dt>
+          <dd class="text-blue-900 font-medium"><%= number_with_delimiter(@snapshot_a.field_count) %></dd>
+        </div>
+        <div class="flex justify-between py-1">
+          <dt class="text-blue-700">API Version:</dt>
+          <dd class="text-blue-900 font-medium"><%= @snapshot_a.api_version %></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+      <h3 class="text-sm font-semibold text-purple-900 mb-2">Snapshot (Newest)</h3>
+      <dl class="text-sm">
+        <div class="flex justify-between py-1">
+          <dt class="text-purple-700">Created:</dt>
+          <dd class="text-purple-900 font-medium"><%= @snapshot_b.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+        </div>
+        <div class="flex justify-between py-1">
+          <dt class="text-purple-700">Fields:</dt>
+          <dd class="text-purple-900 font-medium"><%= number_with_delimiter(@snapshot_b.field_count) %></dd>
+        </div>
+        <div class="flex justify-between py-1">
+          <dt class="text-purple-700">API Version:</dt>
+          <dd class="text-purple-900 font-medium"><%= @snapshot_b.api_version %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Summary Statistics -->
+  <div class="bg-white shadow rounded-lg p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Comparison Summary</h2>
+    <div class="grid grid-cols-4 gap-4">
+      <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+        <div class="text-3xl font-bold text-green-600"><%= @comparison[:stats][:added_count] %></div>
+        <div class="text-sm text-green-700 mt-1">Added Fields</div>
+      </div>
+      <div class="text-center p-4 bg-red-50 rounded-lg border border-red-200">
+        <div class="text-3xl font-bold text-red-600"><%= @comparison[:stats][:removed_count] %></div>
+        <div class="text-sm text-red-700 mt-1">Removed Fields</div>
+      </div>
+      <div class="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+        <div class="text-3xl font-bold text-yellow-600"><%= @comparison[:stats][:changed_count] %></div>
+        <div class="text-sm text-yellow-700 mt-1">Changed Fields</div>
+      </div>
+      <div class="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div class="text-3xl font-bold text-gray-600"><%= @comparison[:stats][:unchanged_count] %></div>
+        <div class="text-sm text-gray-700 mt-1">Unchanged</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Added Fields -->
+  <% if @comparison[:added].any? %>
+    <div class="bg-white shadow rounded-lg mb-6">
+      <div class="px-6 py-4 border-b border-gray-200 bg-green-50">
+        <h2 class="text-lg font-semibold text-green-900">Added Fields (<%= @comparison[:added].size %>)</h2>
+        <p class="text-sm text-green-700">Fields present in Snapshot B but not in Snapshot A</p>
+      </div>
+      <div class="divide-y divide-gray-200">
+        <% @comparison[:added].each do |field| %>
+          <div class="px-6 py-4">
+            <div class="font-mono text-sm text-green-700 font-medium mb-2"><%= field[:path] %></div>
+            <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <% if field[:title].present? %>
+                <div>
+                  <dt class="text-gray-500">Title:</dt>
+                  <dd class="text-gray-900 font-medium"><%= field[:title] %></dd>
+                </div>
+              <% end %>
+              <% if field[:source_type].present? %>
+                <div>
+                  <dt class="text-gray-500">Type:</dt>
+                  <dd class="text-gray-900"><%= field[:source_type] %></dd>
+                </div>
+              <% end %>
+              <% if field[:description].present? %>
+                <div class="col-span-2">
+                  <dt class="text-gray-500">Description:</dt>
+                  <dd class="text-gray-900"><%= field[:description] %></dd>
+                </div>
+              <% end %>
+            </dl>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Removed Fields -->
+  <% if @comparison[:removed].any? %>
+    <div class="bg-white shadow rounded-lg mb-6">
+      <div class="px-6 py-4 border-b border-gray-200 bg-red-50">
+        <h2 class="text-lg font-semibold text-red-900">Removed Fields (<%= @comparison[:removed].size %>)</h2>
+        <p class="text-sm text-red-700">Fields present in Snapshot A but not in Snapshot B</p>
+      </div>
+      <div class="divide-y divide-gray-200">
+        <% @comparison[:removed].each do |field| %>
+          <div class="px-6 py-4">
+            <div class="font-mono text-sm text-red-700 font-medium mb-2"><%= field[:path] %></div>
+            <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <% if field[:title].present? %>
+                <div>
+                  <dt class="text-gray-500">Title:</dt>
+                  <dd class="text-gray-900 font-medium"><%= field[:title] %></dd>
+                </div>
+              <% end %>
+              <% if field[:source_type].present? %>
+                <div>
+                  <dt class="text-gray-500">Type:</dt>
+                  <dd class="text-gray-900"><%= field[:source_type] %></dd>
+                </div>
+              <% end %>
+              <% if field[:description].present? %>
+                <div class="col-span-2">
+                  <dt class="text-gray-500">Description:</dt>
+                  <dd class="text-gray-900"><%= field[:description] %></dd>
+                </div>
+              <% end %>
+            </dl>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Changed Fields -->
+  <% if @comparison[:changed].any? %>
+    <div class="bg-white shadow rounded-lg mb-6">
+      <div class="px-6 py-4 border-b border-gray-200 bg-yellow-50">
+        <h2 class="text-lg font-semibold text-yellow-900">Changed Fields (<%= @comparison[:changed].size %>)</h2>
+        <p class="text-sm text-yellow-700">Fields that exist in both snapshots but have different values</p>
+      </div>
+      <div class="divide-y divide-gray-200">
+        <% @comparison[:changed].each do |change| %>
+          <div class="px-6 py-4">
+            <div class="font-mono text-sm text-yellow-700 font-medium mb-3"><%= change[:path] %></div>
+            <div class="space-y-3">
+              <% change[:changes].each do |key, diff| %>
+                <div class="bg-gray-50 rounded p-3">
+                  <div class="text-xs font-semibold text-gray-600 uppercase mb-2"><%= key.to_s.humanize %></div>
+                  <div class="space-y-1">
+                    <div class="flex items-start">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-2">old</span>
+                      <span class="text-sm text-gray-700 flex-1"><%= diff[:old] || "(empty)" %></span>
+                    </div>
+                    <div class="flex items-start">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mr-2">new</span>
+                      <span class="text-sm text-gray-700 flex-1"><%= diff[:new] || "(empty)" %></span>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- No Changes Message -->
+  <% if @comparison[:added].empty? && @comparison[:removed].empty? && @comparison[:changed].empty? %>
+    <div class="bg-white shadow rounded-lg p-12 text-center">
+      <svg class="mx-auto h-12 w-12 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <h3 class="mt-2 text-lg font-medium text-gray-900">Snapshots are identical</h3>
+      <p class="mt-1 text-sm text-gray-500">No differences found between the selected snapshots.</p>
+    </div>
+  <% end %>
+
+  <div class="mt-8">
+    <%= link_to "← Back to Snapshots", admin_ctgov_metadata_path, class: "text-blue-600 hover:text-blue-800 underline" %>
+  </div>
+</div>

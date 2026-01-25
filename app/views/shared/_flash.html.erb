@@ -1,0 +1,16 @@
+<%= turbo_frame_tag "flash_messages" do %>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+    <div class="rounded-md p-4 mb-4 <%= flash_class(type) %>">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <%= flash_icon(type) %>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium <%= flash_text_class(type) %>">
+            <%= message %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

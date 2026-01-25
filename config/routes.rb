@@ -6,11 +6,6 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  # Turbo Streams test page
-  get "turbo-test", to: "turbo_test#index", as: :turbo_test
-  post "turbo-test/broadcast", to: "turbo_test#broadcast", as: :turbo_test_broadcast
-  delete "turbo-test", to: "turbo_test#index"
-
   # Settings routes
   namespace :settings do
     resource :profile, only: [ :show, :update ]
@@ -20,9 +15,22 @@ Rails.application.routes.draw do
     root to: redirect("/settings/database_access")
   end
 
+  # Documentation routes
+  resources :documentation, only: [ :index ] do
+    collection do
+      get :download_csv
+    end
+  end
+
   # Admin routes
   namespace :admin do
     resources :users, only: [ :index ]
+    resources :ctgov_metadata, only: [ :index ] do
+      collection do
+        post :sync
+        get :compare
+      end
+    end
   end
 
   namespace :api do
