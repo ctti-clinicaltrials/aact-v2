@@ -1,0 +1,27 @@
+<tr>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <input type="checkbox"
+      name="snapshot_ids[]"
+      value="<%= snapshot.id %>"
+      data-action="change->snapshot-compare#checkboxChanged"
+      data-snapshot-compare-target="checkbox"
+      class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <div class="text-sm text-gray-900"><%= snapshot.created_at.strftime("%B %d, %Y") %></div>
+    <div class="text-xs text-gray-500"><%= time_ago_in_words(snapshot.created_at) %> ago</div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+      v<%= snapshot.api_version %>
+    </span>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+    <%= number_with_delimiter(snapshot.field_count) %>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <span class="text-xs font-mono text-gray-600" title="<%= snapshot.checksum %>">
+      <%= snapshot.checksum[0..11] %>...
+    </span>
+  </td>
+</tr>

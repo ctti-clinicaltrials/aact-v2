@@ -25,7 +25,12 @@ Rails.application.routes.draw do
   # Admin routes
   namespace :admin do
     resources :users, only: [ :index ]
-    resources :ctgov_metadata, only: [ :index ]
+    resources :ctgov_metadata, only: [ :index ] do
+      collection do
+        post :sync
+        get :compare
+      end
+    end
   end
 
   namespace :api do
