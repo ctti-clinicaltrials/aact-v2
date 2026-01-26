@@ -1,4 +1,4 @@
-class CreateCTGovMetadataSnapshots < ActiveRecord::Migration[8.0]
+class CreateCTgovMetadataSnapshots < ActiveRecord::Migration[8.0]
   def up
     # Drop unused experimental tables (no restore needed)
     drop_table "ctgov.aact_mappings" if table_exists?("ctgov.aact_mappings")
