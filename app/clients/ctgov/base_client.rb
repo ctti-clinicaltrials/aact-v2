@@ -1,4 +1,4 @@
-module CTGov
+module Ctgov
   # Base client for ClinicalTrials.gov API v2
   # Configures HTTP/2 support and CTGov-specific settings
   # All CTGov clients should inherit from this
