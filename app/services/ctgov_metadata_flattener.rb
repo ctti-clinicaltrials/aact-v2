@@ -22,7 +22,7 @@ class CtgovMetadataFlattener
     # Handle object node
     return [] unless node.is_a?(Hash)
 
-    current_path = path + [node["name"]]
+    current_path = path + [ node["name"] ]
 
     # If node has children, it's a parent - recurse into children
     if node["children"].present?
@@ -32,7 +32,7 @@ class CtgovMetadataFlattener
     end
 
     # Leaf node - extract all fields
-    [build_metadata_record(node, current_path)]
+    [ build_metadata_record(node, current_path) ]
   end
 
   def build_metadata_record(node, path_array)
