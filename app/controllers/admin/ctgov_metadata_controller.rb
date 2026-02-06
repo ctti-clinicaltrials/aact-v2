@@ -68,7 +68,7 @@ class Admin::CtgovMetadataController < Admin::BaseController
     end
 
     # Sort by date: oldest first (baseline), newest second (comparison)
-    snapshots = [CtgovMetadataSnapshot.find(snapshot_ids.first), CtgovMetadataSnapshot.find(snapshot_ids.last)]
+    snapshots = [ CtgovMetadataSnapshot.find(snapshot_ids.first), CtgovMetadataSnapshot.find(snapshot_ids.last) ]
     sorted = snapshots.sort_by(&:created_at)
     @snapshot_a = sorted.first  # Oldest
     @snapshot_b = sorted.last   # Newest

@@ -62,7 +62,7 @@ namespace :ctgov do
                   "type" => "nct",
                   "maxChars" => 20,
                   "synonyms" => true,
-                  "altPieceNames" => ["NCT-ID", "NCT ID"],
+                  "altPieceNames" => [ "NCT-ID", "NCT ID" ],
                   "dedLink" => {
                     "label" => "Study Identification",
                     "url" => "https://clinicaltrials.gov/policy/protocol-definitions#NCTId"
