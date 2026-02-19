@@ -11,6 +11,14 @@ class User < ApplicationRecord
 
   has_many :sessions, dependent: :destroy
 
+  scope :search, ->(term) {
+    return all if term.blank?
+    where(
+      "name ILIKE :q OR email_address ILIKE :q OR database_username ILIKE :q",
+      q: "%#{term}%"
+    )
+  }
+
   encrypts :database_password, deterministic: false
 
   attr_readonly :admin

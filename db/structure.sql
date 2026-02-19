@@ -245,13 +245,15 @@ CREATE TABLE public.users (
     password_digest character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    name character varying,
+    name character varying NOT NULL,
     admin boolean DEFAULT false NOT NULL,
     database_username character varying,
     database_password character varying,
     database_creation_status character varying DEFAULT 'not_requested'::character varying NOT NULL,
     database_creation_error text,
-    database_creation_attempted_at timestamp(6) without time zone
+    database_creation_attempted_at timestamp(6) without time zone,
+    migrated boolean DEFAULT false NOT NULL,
+    metadata jsonb
 );
 
 
@@ -535,6 +537,13 @@ CREATE INDEX index_users_on_database_creation_status ON public.users USING btree
 
 
 --
+-- Name: index_users_on_database_username; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_database_username ON public.users USING btree (database_username);
+
+
+--
 -- Name: index_users_on_email_address; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -577,6 +586,8 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260219151943'),
+('20260215120000'),
 ('20251209120000'),
 ('20251126135835'),
 ('20251028004756'),

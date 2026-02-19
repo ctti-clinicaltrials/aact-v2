@@ -24,7 +24,11 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
-    resources :users, only: [ :index ]
+    resources :users, only: [ :index ] do
+      collection do
+        get :download_csv
+      end
+    end
     resources :ctgov_metadata, only: [ :index ] do
       collection do
         post :sync
