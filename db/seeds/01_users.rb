@@ -19,7 +19,7 @@ User.find_or_create_by!(email_address: "admin_user@example.com") do |u|
   u.database_username = "admin_db"
   u.database_password = "fake_db_password"
   u.database_creation_status = "completed"
-  u.migrated_at = 2.months.ago
+  u.migrated = true
   u.created_at = 1.year.ago
 end
 
@@ -84,7 +84,7 @@ users_data.each do |data|
     u.database_username = data[:db_user]
     u.database_password = "fake_db_password" if data[:db_user].present?
     u.database_creation_status = data[:db_status]
-    u.migrated_at = data[:migrated]
+    u.migrated = data[:migrated].present?
     u.created_at = data[:joined]
   end
 end

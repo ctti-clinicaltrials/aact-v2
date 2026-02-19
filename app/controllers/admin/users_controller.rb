@@ -40,7 +40,7 @@ class Admin::UsersController < Admin::BaseController
           user.admin?,
           user.database_creation_status,
           user.created_at&.strftime("%Y-%m-%d"),
-          user.migrated_at&.strftime("%Y-%m-%d")
+          user.migrated?
         ]
       end
     end
