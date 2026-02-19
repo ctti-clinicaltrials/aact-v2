@@ -29,6 +29,8 @@ namespace :users do
     updated = 0
     errors = []
 
+    User.record_timestamps = false
+
     rows.each_with_index do |row, index|
       email = row["email"].to_s.strip.downcase
       if email.blank?
@@ -66,7 +68,7 @@ namespace :users do
       user.migrated = true
       user.metadata = metadata
       user.password_digest = row["encrypted_password"]
-      user.created_at = row["created_at"] if is_new
+      user.created_at = row["created_at"]
 
       user.save!
 
@@ -75,6 +77,7 @@ namespace :users do
       errors << "row #{index + 1}: #{email} — #{e.message}"
     end
 
+    User.record_timestamps = true
     conn.close
 
     puts <<~SUMMARY
