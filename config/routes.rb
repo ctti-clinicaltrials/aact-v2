@@ -29,6 +29,8 @@ Rails.application.routes.draw do
         get :download_csv
       end
     end
+    get "usage", to: "usage#index"
+    get "usage/:date", to: "usage#show", as: :daily_usage
     resources :ctgov_metadata, only: [ :index ] do
       collection do
         post :sync
