@@ -1,0 +1,8 @@
+exclude_paths:
+  - lib/tasks
+
+skip_checks:
+  - type: Execute
+    file: app/services/logs_service.rb
+  - type: SQL
+    file: app/models/aact_public/database_user.rb
