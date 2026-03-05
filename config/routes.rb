@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
-    resources :users, only: [ :index ] do
+    resources :users, only: [ :index, :show ] do
       collection do
         get :download_csv
       end

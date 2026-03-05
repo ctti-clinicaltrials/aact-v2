@@ -27,6 +27,9 @@ class Admin::UsageController < Admin::BaseController
       total_duration: @users.sum { |u| u[:total_duration_ms] }
     }
     @stats[:avg_queries_per_user] = @stats[:total_users].positive? ? @stats[:total_queries].to_f / @stats[:total_users] : 0
+
+    usernames = @users.map { |u| u[:username] }
+    @user_map = User.where(database_username: usernames).index_by(&:database_username)
   end
 
   private

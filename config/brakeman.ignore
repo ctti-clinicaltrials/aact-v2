@@ -47,5 +47,5 @@
       "note": "False positive - using quote_column_name() for safe escaping"
     }
   ],
-  "brakeman_version": "8.0.2"
+  "brakeman_version": "8.0.4"
 }

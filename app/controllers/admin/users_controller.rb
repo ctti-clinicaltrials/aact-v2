@@ -9,6 +9,16 @@ class Admin::UsersController < Admin::BaseController
     render :results if turbo_frame_request?
   end
 
+  def show
+    @user = User.find(params[:id])
+
+    if @user.database_username.present?
+      @days_active, @first_active, @last_active = AactPublicQueryMetric
+        .where(username: @user.database_username)
+        .pick(Arel.sql("COUNT(*), MIN(log_date), MAX(log_date)"))
+    end
+  end
+
   def download_csv
     scope = User
       .search(search_param)
