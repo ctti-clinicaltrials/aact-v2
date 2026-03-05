@@ -1,5 +1,5 @@
 class V1SnapshotsService
-  SNAPSHOT_TYPES = ["pgdump", "flatfiles", "covid"].freeze
+  SNAPSHOT_TYPES = [ "pgdump", "flatfiles", "covid" ].freeze
 
   def latest
     SNAPSHOT_TYPES.map do |type|
@@ -21,7 +21,7 @@ class V1SnapshotsService
       return { error: "Invalid snapshot type. Available types: #{SNAPSHOT_TYPES.join(', ')}" }
     end
 
-    types_to_fetch = type.present? ? [type] : SNAPSHOT_TYPES
+    types_to_fetch = type.present? ? [ type ] : SNAPSHOT_TYPES
     result = {}
 
     types_to_fetch.each do |snapshot_type|
@@ -52,9 +52,9 @@ class V1SnapshotsService
     records = Aact::Snapshot.where(file_type: db_type)
                            .order(created_at: :desc)
                            .limit(30)
-    
+
     api_type = SNAPSHOT_TYPES.find { |t| Aact::Snapshot::TYPE_MAPPING[t] == db_type }
-    
+
     records.map do |record|
       {
         type: api_type,
@@ -89,14 +89,14 @@ class V1SnapshotsService
         size: format_size(target_record.file_size)
       }
     end
-    
+
     monthly_by_year
   end
 
   def format_size(bytes)
     return "#{bytes} B" if bytes.nil? || bytes < 1024
 
-    units = ["B", "KB", "MB", "GB", "TB"]
+    units = [ "B", "KB", "MB", "GB", "TB" ]
     size = bytes.to_f
     unit_index = 0
 

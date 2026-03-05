@@ -25,3 +25,10 @@ external:
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   url: <%= ENV["AACT_CORE_DB_URL"] %>
+
+# Public database for user management operations
+public_database:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  url: <%= ENV["AACT_PUBLIC_DB_URL"] %>

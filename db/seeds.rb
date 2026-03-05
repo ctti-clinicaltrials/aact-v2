@@ -1,9 +1,9 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+# Load seed files in alphabetical order.
+# Each file should be idempotent (safe to run multiple times).
 #
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Usage:
+#   bin/rails db:seed        — run seeds standalone
+#   bin/rails db:setup       — create + schema + seed (fresh start)
+#   bin/rails db:reset       — drop + create + schema + seed (nuke & rebuild)
+
+Dir[Rails.root.join("db/seeds/*.rb")].sort.each { |f| require f }

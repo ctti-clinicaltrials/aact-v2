@@ -1,9 +1,43 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  mount Sidekiq::Web => "/sidekiq"
+  # Authentication routes
+  resource :sign_up
+  resource :session
+  resources :passwords, param: :token
 
-  get "up" => "rails/health#show", as: :rails_health_check
+  # Settings routes
+  namespace :settings do
+    resource :profile, only: [ :show, :update ]
+    resource :password, only: [ :show, :update ]
+    resource :database_access, only: [ :show, :new, :create ]
+
+    root to: redirect("/settings/database_access")
+  end
+
+  # Documentation routes
+  resources :documentation, only: [ :index ] do
+    collection do
+      get :download_csv
+    end
+  end
+
+  # Admin routes
+  namespace :admin do
+    resources :users, only: [ :index, :show ] do
+      collection do
+        get :download_csv
+      end
+    end
+    get "usage", to: "usage#index"
+    get "usage/:date", to: "usage#show", as: :daily_usage
+    resources :ctgov_metadata, only: [ :index ] do
+      collection do
+        post :sync
+        get :compare
+      end
+    end
+  end
 
   namespace :api do
     namespace :v1 do
@@ -29,6 +63,11 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+
+  mount Sidekiq::Web => "/sidekiq"
+  mount ActionCable.server => "/cable"
+  get "up" => "rails/health#show", as: :rails_health_check
+
+
+  root "home#index"
 end

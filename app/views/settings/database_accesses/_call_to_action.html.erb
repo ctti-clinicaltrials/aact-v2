@@ -1,0 +1,15 @@
+<!-- State 1: Not set up - Show direct database access option -->
+<div class="bg-white border border-gray-200 rounded-lg p-8 text-center">
+  <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+  </svg>
+  <h3 class="text-lg font-medium text-gray-900 mb-2">Need Direct Database Access?</h3>
+  <p class="text-gray-600 mb-6">
+    For advanced users who want to run complex queries or integrate with their own tools,
+    set up read-only database credentials for direct PostgreSQL access.
+  </p>
+  <%= link_to "Set Up Database Access",
+              new_settings_database_access_path,
+              data: { turbo_frame: "database_setup" },
+              class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+</div>

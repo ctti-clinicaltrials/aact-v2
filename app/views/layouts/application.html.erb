@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= action_cable_meta_tag %>
 
     <%= yield :head %>
 
@@ -13,11 +14,69 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <!-- Navigation Bar -->
+    <nav class="bg-white border-b border-gray-200">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <!-- Logo/Brand -->
+          <div class="flex-shrink-0">
+            <%= link_to root_path, class: "flex items-center" do %>
+              <span class="text-xl font-bold text-blue-600">AACT</span>
+            <% end %>
+          </div>
+
+          <!-- Navigation Links -->
+          <div class="flex items-center space-x-4">
+            <% if authenticated? %>
+              <!-- Resources -->
+              <%= link_to "Documentation", documentation_index_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
+
+              <% if Current.user&.admin? %>
+                <%= link_to "Users", admin_users_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
+                <%= link_to "Usage", admin_usage_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
+                <%= link_to "CTGov", admin_ctgov_metadata_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
+              <% end %>
+
+              <%= link_to "Settings", settings_root_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
+            <% else %>
+              <%= link_to "Sign In", new_session_path, 
+                    class: "text-sm text-gray-700 hover:text-blue-600" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <%= turbo_frame_tag "flash_messages" do %>
+      <% if flash.any? %>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <% flash.each do |type, message| %>
+            <div class="rounded-md p-4 mb-4 <%= flash_class(type) %>">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <%= flash_icon(type) %>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium <%= flash_text_class(type) %>">
+                    <%= message %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <%= yield %>
+    </main>
   </body>
 </html>

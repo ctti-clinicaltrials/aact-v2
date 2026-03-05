@@ -1,6 +1,9 @@
 module Api
   module V1
     class SnapshotsController < ApplicationController
+      # Skip authentication for API endpoints (server-to-server)
+      allow_unauthenticated_access
+
       before_action :setup_snapshots_service
 
       def index

@@ -1,0 +1,51 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "271a1a4cd4d1e4cbd629d9006d3c8ef0f93387f7fa881c61a7900e7f427c7c68",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/aact_public/database_user.rb",
+      "line": 35,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"ALTER ROLE #{connection.quote_column_name(username)} IN DATABASE #{connection.current_database} SET search_path = ctgov, mesh_archive\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "AactPublic::DatabaseUser",
+        "method": "AactPublic::DatabaseUser.create_user"
+      },
+      "user_input": "connection.current_database",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "False positive - using quote_column_name() for safe SQL escaping"
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "6442788bd92fee71200df72e469d0230e3c88393b61b04ef20de148147950f7e",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/logs_service.rb",
+      "line": 18,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"scp #{ENV[\"LOGS_SERVER_USER\"]}@#{ENV[\"LOGS_SERVER_HOST\"]}:#{\"/aact-files/logs/postgresql-#{(date_str or Date.yesterday.strftime(\"%a\"))}.csv\"} #{Rails.root.join(\"tmp\", \"aact_public_logs\").join(\"postgresql-#{(date_str or Date.yesterday.strftime(\"%a\"))}.csv\")}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "LogsService",
+        "method": "download_logs"
+      },
+      "user_input": "ENV[\"LOGS_SERVER_USER\"]",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": "False positive - using quote_column_name() for safe escaping"
+    }
+  ],
+  "brakeman_version": "8.0.4"
+}

@@ -1,6 +1,9 @@
 module Api
   module V1
     class AnalyticsController < ApplicationController
+      # Skip authentication for API endpoints (server-to-server)
+      allow_unauthenticated_access
+
       before_action :set_date_params, only: [ :database_usage, :user_usage ]
       before_action :set_service, only: [ :database_usage, :user_usage ]
 

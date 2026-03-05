@@ -1,0 +1,80 @@
+<div class="mx-auto max-w-6xl">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">CTGov Metadata</h1>
+    <p class="text-gray-600">Manage ClinicalTrials.gov metadata snapshots and field definitions</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <%= render "admin/ctgov_metadata/summary_cards",
+    total_snapshots: @total_snapshots,
+    latest_snapshot: @latest_snapshot,
+    active_fields_count: @active_fields_count,
+    total_fields_count: @total_fields_count %>
+
+  <!-- Sync Button -->
+  <div class="mb-6 flex justify-end">
+    <%= form_with url: sync_admin_ctgov_metadata_path, method: :post, data: { controller: "sync", action: "turbo:submit-start->sync#sync turbo:submit-end->sync#complete" } do |form| %>
+      <%= form.button type: "submit", data: { sync_target: "button" }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed" do %>
+        <!-- Spinner (hidden by default) -->
+        <svg data-sync-target="spinner" class="hidden animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span data-sync-target="text">Sync Now</span>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- Snapshots Table -->
+  <%= form_with url: compare_admin_ctgov_metadata_path, method: :get, data: { snapshot_compare_target: "form", controller: "snapshot-compare" } do |form| %>
+    <div class="bg-white shadow rounded-lg overflow-hidden" id="snapshots_table">
+      <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <h2 class="text-lg font-semibold text-gray-900">Metadata Snapshots</h2>
+        <%= form.button type: "submit",
+          data: { snapshot_compare_target: "compareButton" },
+          disabled: true,
+          class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed" do %>
+          <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+          </svg>
+          <span data-snapshot-compare-target="buttonText">Compare Selected</span>
+        <% end %>
+      </div>
+
+      <% if @snapshots.any? %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
+                  <span class="sr-only">Compare</span>
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">API Version</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Field Count</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Checksum</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200" id="snapshots_tbody">
+              <% @snapshots.each do |snapshot| %>
+                <%= render "admin/ctgov_metadata/snapshot_row", snapshot: snapshot %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="px-6 py-12 text-center">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No snapshots</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by syncing metadata from the CTGov API.</p>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="mt-8">
+    <%= link_to "Back to Admin", admin_users_path, class: "text-gray-700 underline hover:no-underline" %>
+  </div>
+</div>

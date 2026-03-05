@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "./components/pagy.css";
+
+/* AACT brand colors — update hex values as needed.
+   Tailwind v4 @theme generates utility classes: text-navy, bg-crimson, etc. */
+@theme {
+  --color-navy: #2d3769;
+  --color-blue: #3b6e9e;
+  --color-sky: #9fb8d4;
+  --color-crimson: #8b1a2b;
+  --color-red: #a81e35;
+}
