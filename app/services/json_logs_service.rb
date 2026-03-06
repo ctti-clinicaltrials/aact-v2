@@ -1,5 +1,5 @@
 require "net/http"
-require "json"
+require "oj"
 
 class JsonLogsService
   BASE_URL = "https://ctti-aact.nyc3.digitaloceanspaces.com/pgbadger/json"
@@ -48,11 +48,10 @@ class JsonLogsService
   end
 
   def extract_metrics_from_json(file_path)
-    content = File.read(file_path, encoding: "utf-8")
-    json_data = JSON.parse(content)
-    users_data = json_data.dig("user_info", "postgres") || {}
+    users_data = Oj::Doc.open_file(file_path.to_s) do |doc|
+      doc.fetch("/user_info/postgres") || {}
+    end
     puts "Found #{users_data.keys.length} users in logs"
-    # return limited set
     users_data.transform_values do |stats|
       {
         "count" => stats["count"] || 0,

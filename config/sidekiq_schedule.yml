@@ -1,0 +1,5 @@
+json_logs_processor:
+  cron: "0 6 * * *"
+  class: JsonLogsProcessorWorker
+  queue: logs
+  description: "Process yesterday's PgBadger JSON logs"

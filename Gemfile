@@ -26,10 +26,14 @@ gem "jbuilder"
 # gem "redis", ">= 4.0.1"
 # Background job processing
 gem "sidekiq"
+gem "sidekiq-cron"
 
 gem "tailwindcss-rails"
 # Pagination [https://github.com/ddnexus/pagy]
 gem "pagy"
+
+# Fast JSON parser with streaming support for large files
+gem "oj"
 
 # HTTP client for API requests
 gem "faraday", "~> 2.7"
