@@ -4,6 +4,73 @@ require "oj"
 class JsonLogsService
   BASE_URL = "https://ctti-aact.nyc3.digitaloceanspaces.com/pgbadger/json"
 
+  class PostgresUsageExtractor < Oj::Saj
+    attr_reader :result
+
+    def initialize
+      @result = {}
+      @state = :scanning
+      @depth = 0
+      @user_info_depth = nil
+      @postgres_depth = nil
+      @user_depth = nil
+      @current_user = nil
+      @current_stats = {}
+    end
+
+    def hash_start(key)
+      @depth += 1
+
+      case @state
+      when :scanning
+        if key == "user_info"
+          @user_info_depth = @depth
+        elsif key == "postgres" && @depth == (@user_info_depth.to_i + 1)
+          @state = :in_postgres
+          @postgres_depth = @depth
+        end
+      when :in_postgres
+        @state = :in_user
+        @current_user = key
+        @current_stats = {}
+        @user_depth = @depth
+      end
+      # :in_user — nested hashes inside a user's stats; depth tracks us out
+      # :done   — past postgres entirely, ignore everything
+    end
+
+    def hash_end(key)
+      case @state
+      when :in_user
+        if @depth == @user_depth
+          @result[@current_user] = {
+            "count"    => @current_stats.fetch("count", 0),
+            "duration" => @current_stats.fetch("duration", 0.0)
+          }
+          @current_user = nil
+          @current_stats = {}
+          @state = :in_postgres
+        end
+      when :in_postgres
+        @state = :done if @depth == @postgres_depth
+      end
+
+      @depth -= 1
+    end
+
+    def add_value(value, key)
+      return unless @state == :in_user && @depth == @user_depth
+      @current_stats[key] = value if key == "count" || key == "duration"
+    end
+
+    def array_start(key) = @depth += 1
+    def array_end(key)   = @depth -= 1
+
+    def error(message, line, column)
+      raise "JSON parse error at #{line}:#{column} — #{message}"
+    end
+  end
+
   def initialize(date = nil)
     @date = date&.is_a?(String) ? Date.parse(date) : (date || Date.yesterday)
     @date_str = @date.strftime("%Y-%m-%d")
@@ -48,16 +115,10 @@ class JsonLogsService
   end
 
   def extract_metrics_from_json(file_path)
-    users_data = Oj::Doc.open_file(file_path.to_s) do |doc|
-      doc.fetch("/user_info/postgres") || {}
-    end
-    puts "Found #{users_data.keys.length} users in logs"
-    users_data.transform_values do |stats|
-      {
-        "count" => stats["count"] || 0,
-        "duration" => stats["duration"] || 0.0
-      }
-    end
+    extractor = PostgresUsageExtractor.new
+    File.open(file_path) { |f| Oj.saj_parse(extractor, f) }
+    puts "Found #{extractor.result.size} users in logs"
+    extractor.result
   rescue StandardError => e
     Rails.logger.error "Failed to extract metrics from JSON: #{e.message}"
     raise e
