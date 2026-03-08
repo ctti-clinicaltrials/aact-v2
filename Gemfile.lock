@@ -97,6 +97,9 @@ GEM
     concurrent-ruby (1.3.5)
     connection_pool (2.5.4)
     crass (1.0.6)
+    cronex (0.15.0)
+      tzinfo
+      unicode (>= 0.4.4.5)
     csv (3.3.5)
     date (3.4.1)
     debug (1.9.2)
@@ -109,6 +112,8 @@ GEM
     drb (2.2.3)
     erb (5.0.2)
     erubi (1.13.1)
+    et-orbi (1.4.0)
+      tzinfo
     ethon (0.15.0)
       ffi (>= 1.15.0)
     faraday (2.14.0)
@@ -128,6 +133,9 @@ GEM
     ffi (1.17.2-x86-linux-gnu)
     ffi (1.17.2-x86_64-darwin)
     ffi (1.17.2-x86_64-linux-gnu)
+    fugit (1.12.1)
+      et-orbi (~> 1.4)
+      raabro (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
     i18n (1.14.7)
@@ -188,6 +196,10 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-gnu)
       racc (~> 1.4)
+    oj (3.16.15)
+      bigdecimal (>= 3.0)
+      ostruct (>= 0.2)
+    ostruct (0.6.3)
     pagy (43.1.4)
       json
       yaml
@@ -209,6 +221,7 @@ GEM
     public_suffix (6.0.1)
     puma (6.4.3)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.8.1)
     rack (3.2.1)
     rack-session (2.1.1)
@@ -302,6 +315,11 @@ GEM
       logger
       rack (>= 2.2.4)
       redis-client (>= 0.22.2)
+    sidekiq-cron (2.3.1)
+      cronex (>= 0.13.0)
+      fugit (~> 1.8, >= 1.11.1)
+      globalid (>= 1.0.1)
+      sidekiq (>= 6.5.0)
     solid_cable (3.0.12)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -328,6 +346,7 @@ GEM
       ethon (>= 0.9.0, < 0.16.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    unicode (0.4.4.5)
     unicode-display_width (2.6.0)
     uri (1.0.3)
     useragent (0.16.11)
@@ -369,6 +388,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   next_rails
+  oj
   pagy
   pg (~> 1.1)
   propshaft
@@ -377,6 +397,7 @@ DEPENDENCIES
   rubocop-rails-omakase
   selenium-webdriver
   sidekiq
+  sidekiq-cron
   solid_cable
   stimulus-rails
   tailwindcss-rails
