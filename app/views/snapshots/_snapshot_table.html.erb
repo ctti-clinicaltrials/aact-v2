@@ -1,0 +1,34 @@
+<div class="bg-white shadow rounded-lg overflow-hidden overflow-x-auto">
+  <table class="w-full table-fixed divide-y divide-gray-200">
+    <colgroup>
+      <col class="w-36">
+      <col class="hidden md:table-column">
+      <col class="w-24">
+      <col class="w-36">
+    </colgroup>
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+        <th class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      <% snapshots.each do |snapshot| %>
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= snapshot.formatted_date %></td>
+          <td class="hidden md:table-cell px-6 py-4 text-sm text-gray-600 truncate"><%= snapshot.filename %></td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= snapshot.formatted_size %></td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <%= link_to "Download",
+                  snapshot.url,
+                  class: "px-3 py-1.5 bg-blue text-white text-sm rounded-md hover:bg-navy",
+                  download: snapshot.filename,
+                  data: { turbo: false } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

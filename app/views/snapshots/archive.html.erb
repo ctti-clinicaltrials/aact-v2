@@ -16,34 +16,7 @@
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Daily Snapshots</h2>
 
       <% if @daily_snapshots.any? %>
-        <div class="bg-white shadow rounded-lg overflow-hidden overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <% @daily_snapshots.each do |snapshot| %>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= snapshot.formatted_date %></td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= snapshot.filename %></td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= snapshot.formatted_size %></td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <%= link_to "Download",
-                          snapshot.url,
-                          class: "px-3 py-1.5 bg-blue text-white text-sm rounded-md hover:bg-navy",
-                          download: snapshot.filename,
-                          data: { turbo: false } %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
+        <%= render "snapshot_table", snapshots: @daily_snapshots %>
 
         <div class="mt-4 flex justify-center">
           <%== @pagy.series_nav %>
@@ -73,34 +46,7 @@
 
         <% year_snapshots = @monthly_snapshots[@year] %>
         <% if year_snapshots.present? %>
-          <div class="bg-white shadow rounded-lg overflow-hidden overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <% year_snapshots.sort_by(&:created_at).reverse.each do |snapshot| %>
-                  <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= snapshot.formatted_date %></td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= snapshot.filename %></td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= snapshot.formatted_size %></td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <%= link_to "Download",
-                            snapshot.url,
-                            class: "px-3 py-1.5 bg-blue text-white text-sm rounded-md hover:bg-navy",
-                            download: snapshot.filename,
-                            data: { turbo: false } %>
-                    </td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
+          <%= render "snapshot_table", snapshots: year_snapshots.sort_by(&:created_at).reverse %>
         <% else %>
           <%= render "empty_state",
             title: "No Archives for #{@year}",
