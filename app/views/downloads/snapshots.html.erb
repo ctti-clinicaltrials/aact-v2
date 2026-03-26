@@ -1,0 +1,116 @@
+<% content_for :title, "#{snapshot_title(@type)} Archive — AACT" %>
+
+<div class="mb-6">
+  <%= render "shared/back_link", path: downloads_path, label: "Downloads" %>
+  <h1 class="text-3xl font-bold text-gray-900 mt-2"><%= snapshot_title(@type) %> Archive</h1>
+</div>
+
+<% if @daily_snapshots.none? && @monthly_snapshots.empty? %>
+  <%= render "empty_state",
+    title: "No Snapshots Available",
+    message: "No snapshots are currently available for this type." %>
+<% else %>
+  <!-- Daily Snapshots -->
+  <%= turbo_frame_tag "daily_snapshots" do %>
+    <div class="mb-10">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Daily Snapshots</h2>
+
+      <% if @daily_snapshots.any? %>
+        <div class="bg-white shadow rounded-lg overflow-hidden overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @daily_snapshots.each do |snapshot| %>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= snapshot.formatted_date %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= snapshot.filename %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= snapshot.formatted_size %></td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <%= link_to "Download",
+                          snapshot.url,
+                          class: "px-3 py-1.5 bg-blue text-white text-sm rounded-md hover:bg-navy",
+                          download: snapshot.filename,
+                          data: { turbo: false } %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-4 flex justify-center">
+          <%== @pagy.series_nav %>
+        </div>
+      <% else %>
+        <%= render "empty_state",
+          title: "No Daily Snapshots",
+          message: "No recent daily snapshots are available for this type." %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Monthly Archive -->
+  <div>
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Monthly Archives</h2>
+
+    <%= turbo_frame_tag "monthly_archive" do %>
+      <% if @monthly_snapshots.any? %>
+        <!-- Year Navigation -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <% @monthly_snapshots.keys.sort.reverse.each do |year| %>
+            <%= link_to year,
+                  download_snapshots_path(type: @type, year: year),
+                  class: "px-4 py-2 text-sm rounded-md font-medium #{year == @year ? 'bg-navy text-white' : 'bg-white border border-navy text-navy hover:bg-gray-50'}" %>
+          <% end %>
+        </div>
+
+        <% year_snapshots = @monthly_snapshots[@year] %>
+        <% if year_snapshots.present? %>
+          <div class="bg-white shadow rounded-lg overflow-hidden overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% year_snapshots.sort_by(&:created_at).reverse.each do |snapshot| %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= snapshot.formatted_date %></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= snapshot.filename %></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= snapshot.formatted_size %></td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <%= link_to "Download",
+                            snapshot.url,
+                            class: "px-3 py-1.5 bg-blue text-white text-sm rounded-md hover:bg-navy",
+                            download: snapshot.filename,
+                            data: { turbo: false } %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <%= render "empty_state",
+            title: "No Archives for #{@year}",
+            message: "No monthly snapshots are available for this year." %>
+        <% end %>
+      <% else %>
+        <%= render "empty_state",
+          title: "No Monthly Archives",
+          message: "No monthly archives are currently available." %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

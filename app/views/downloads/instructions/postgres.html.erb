@@ -1,0 +1,104 @@
+<% content_for :title, "PostgreSQL Instructions — AACT" %>
+
+<div class="mb-6">
+  <%= render "shared/back_link", path: downloads_path, label: "Downloads" %>
+  <h1 class="text-3xl font-bold text-gray-900 mt-2">PostgreSQL Database Instructions</h1>
+</div>
+
+<div class="max-w-3xl space-y-8">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-3">Overview</h2>
+    <p class="text-sm text-gray-700 mb-3">
+      The PostgreSQL snapshots contain complete dumps of the AACT database that can be loaded into your local
+      PostgreSQL installation. This option is ideal for users who need complex queries, best performance, or
+      integration with other databases and tools.
+    </p>
+    <p class="text-sm text-gray-700">
+      The AACT system provides access to the <strong>30 most recent daily snapshots</strong> along with
+      permanent <strong>monthly archives</strong> created on the first day of each month.
+    </p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-3">Prerequisites</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong>PostgreSQL:</strong> Version 14 or higher recommended. Download from
+        <a href="https://www.postgresql.org/download/" class="text-blue hover:underline" target="_blank">postgresql.org</a>.
+      </li>
+      <li><strong>Disk Space:</strong> At least 10 GB available.</li>
+      <li><strong>RAM:</strong> 8 GB or more recommended for optimal restore performance.</li>
+    </ul>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-6">Steps</h2>
+    <ol class="space-y-6">
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">1</span>
+        <div>
+          <h3 class="font-medium text-gray-900 mb-1">Download a snapshot</h3>
+          <p class="text-sm text-gray-700">
+            Get the <%= link_to "latest snapshot", downloads_path, class: "text-blue hover:underline" %> or
+            browse the <%= link_to "archive", download_snapshots_path(type: "pgdump"), class: "text-blue hover:underline" %> for older data.
+          </p>
+        </div>
+      </li>
+
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">2</span>
+        <div>
+          <h3 class="font-medium text-gray-900 mb-1">Extract the ZIP file</h3>
+          <p class="text-sm text-gray-700">
+            Extract the downloaded ZIP file. The key file inside is <code class="bg-gray-100 px-1 rounded text-xs">postgres.dmp</code>.
+          </p>
+        </div>
+      </li>
+
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">3</span>
+        <div>
+          <h3 class="font-medium text-gray-900 mb-1">Create a local database</h3>
+          <div class="mt-2 bg-gray-900 text-green-400 text-sm rounded-md px-4 py-3 font-mono">
+            createdb aact
+          </div>
+        </div>
+      </li>
+
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">4</span>
+        <div>
+          <h3 class="font-medium text-gray-900 mb-1">Restore from the dump file</h3>
+          <div class="mt-2 bg-gray-900 text-green-400 text-sm rounded-md px-4 py-3 font-mono">
+            pg_restore -e -v -O -x -d aact --no-owner path/to/postgres.dmp
+          </div>
+          <p class="mt-2 text-sm text-gray-600">
+            To replace an existing AACT database, add <code class="bg-gray-100 px-1 rounded text-xs">--clean</code> to the command.
+            Restore typically takes 5–15 minutes.
+          </p>
+        </div>
+      </li>
+
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">5</span>
+        <div>
+          <h3 class="font-medium text-gray-900 mb-1">Connect and query</h3>
+          <div class="mt-2 bg-gray-900 text-green-400 text-sm rounded-md px-4 py-3 font-mono">
+            psql -d aact
+          </div>
+          <p class="mt-2 text-sm text-gray-600">
+            Verify the restore with: <code class="bg-gray-100 px-1 rounded text-xs">SELECT count(*) FROM studies;</code>
+          </p>
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-3">Troubleshooting</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong>Permission errors:</strong> Run commands with your PostgreSQL superuser or check role privileges.</li>
+      <li><strong>Database already exists:</strong> Use <code class="bg-gray-100 px-1 rounded text-xs">dropdb aact</code> first, or add <code class="bg-gray-100 px-1 rounded text-xs">--clean</code> to pg_restore.</li>
+      <li><strong>Out of disk space:</strong> Ensure at least 10 GB free before restoring.</li>
+    </ul>
+  </div>
+</div>
