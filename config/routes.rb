@@ -15,6 +15,17 @@ Rails.application.routes.draw do
     root to: redirect("/settings/database_access")
   end
 
+  # Snapshots routes
+  get "snapshots", to: "snapshots#index", as: :snapshots
+  get "snapshots/archive", to: "snapshots#archive", as: :archive_snapshots
+
+  # Instructions routes
+  scope :instructions do
+    get "postgres", to: "instructions#postgres", as: :postgres_instructions
+    get "flatfiles", to: "instructions#flatfiles", as: :flatfiles_instructions
+    get "covid19", to: "instructions#covid19", as: :covid19_instructions
+  end
+
   # Documentation routes
   resources :documentation, only: [ :index ] do
     collection do

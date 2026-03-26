@@ -33,7 +33,7 @@ records = []
   weekend = date.saturday? || date.sunday?
 
   # Fewer users active on weekends
-  active_count = weekend ? rand(3..[usernames.size / 2, 3].max) : rand((usernames.size / 2)..usernames.size)
+  active_count = weekend ? rand(3..[ usernames.size / 2, 3 ].max) : rand((usernames.size / 2)..usernames.size)
   active_users = usernames.sample(active_count)
 
   active_users.each do |username|

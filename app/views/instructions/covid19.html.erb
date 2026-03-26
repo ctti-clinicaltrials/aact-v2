@@ -1,0 +1,68 @@
+<% content_for :title, "COVID-19 Instructions — AACT" %>
+
+<div class="max-w-5xl pl-12 space-y-10">
+  <div class="mb-8">
+    <%= render "shared/back_link", path: snapshots_path, label: "Snapshots" %>
+    <h1 class="text-3xl font-bold text-gray-900 mt-2">COVID-19 Spreadsheet Instructions</h1>
+  </div>
+
+  <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+    <p class="text-sm text-yellow-800">
+      <strong>Please Note:</strong> COVID-19 spreadsheets are no longer actively generated. Please check
+      the "Last Exported" date on the snapshots page for the most recent available data.
+    </p>
+  </div>
+
+  <section>
+    <h2 class="relative block w-full pl-4 text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 before:content-[''] before:absolute before:left-0 before:top-0 before:w-1.5 before:h-6 before:bg-navy before:rounded-sm">Overview</h2>
+    <div class="text-sm text-gray-700 space-y-3">
+      <p>
+        The following files contain clinical studies related to <strong>Coronavirus Disease 2019
+        (COVID-19)</strong> from ClinicalTrials.gov as of the date and time of file creation. There may
+        be more studies on ClinicalTrials.gov that were uploaded after the most recent file here. Each
+        file allows users without advanced database skills to explore the trials in a spreadsheet format.
+      </p>
+      <p>
+        The spreadsheet was created using
+        <a href="https://clinicaltrials.gov/search?cond=COVID-19" class="text-blue hover:underline" target="_blank">ClinicalTrials.gov's COVID-19 search criteria</a>
+        and the database for Aggregate Analysis of ClinicalTrials.gov (AACT). This search strategy
+        includes specific terms and filters to identify all COVID-19 related trials.
+      </p>
+      <p>
+        Each study appears as a single row in the spreadsheet with 68 columns of study information,
+        including study identifiers, titles, conditions, interventions, locations, and results status.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="relative block w-full pl-4 text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 before:content-[''] before:absolute before:left-0 before:top-0 before:w-1.5 before:h-6 before:bg-navy before:rounded-sm">Steps</h2>
+    <ol class="space-y-6">
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">1</span>
+        <div>
+          <h3 class="font-medium text-gray-900 mb-1">Download a COVID-19 spreadsheet</h3>
+          <p class="text-sm text-gray-700">
+            View and download available COVID-19 spreadsheets from the
+            <%= link_to "COVID-19 archive", archive_snapshots_path(type: "covid"), class: "text-blue hover:underline" %> page.
+            These files contain historical data from when COVID-19 spreadsheets were still being generated.
+            For the most current clinical trial information, please visit
+            <a href="https://clinicaltrials.gov/search?cond=COVID-19" class="text-blue hover:underline" target="_blank">ClinicalTrials.gov</a> directly.
+          </p>
+        </div>
+      </li>
+
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">2</span>
+        <div>
+          <h3 class="font-medium text-gray-900 mb-1">Open with spreadsheet software</h3>
+          <p class="text-sm text-gray-700">
+            Open the downloaded file in <strong>Microsoft Excel, Google Sheets, or LibreOffice Calc</strong>.
+            Each row represents a single clinical trial, with columns containing various attributes of the study.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+</div>

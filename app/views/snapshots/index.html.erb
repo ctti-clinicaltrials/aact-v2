@@ -1,0 +1,30 @@
+<% content_for :title, "Snapshots — AACT" %>
+
+<div class="mb-8">
+  <h1 class="text-3xl font-bold text-gray-900">AACT Database Snapshots</h1>
+  <p class="mt-3 text-gray-600">
+    Explore the options below to find the format that works best for you. Each card shows the most
+    recent snapshot available — click <strong>Download File</strong> to get a copy right away.
+    Not sure which format to use? Review the <strong>Instructions</strong> for each type to understand
+    what's included and how to load the data into your tools.
+  </p>
+</div>
+
+<% if @latest_snapshots.present? %>
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <% @latest_snapshots.each do |snapshot| %>
+      <%= render "snapshot_card", snapshot: snapshot %>
+    <% end %>
+  </div>
+<% else %>
+  <%= render "empty_state",
+    title: "No Snapshots Available",
+    message: "We couldn't retrieve the latest database snapshots at this time. Please try again later." %>
+<% end %>
+
+<div class="mt-10 border-t border-gray-200 pt-8">
+  <h2 class="text-lg font-semibold text-gray-700 mb-4">Additional Resources</h2>
+  <div class="flex gap-4">
+    <%= link_to "View Documentation", documentation_index_path, class: "text-sm text-blue hover:underline" %>
+  </div>
+</div>

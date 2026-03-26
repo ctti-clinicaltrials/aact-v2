@@ -1,0 +1,32 @@
+<div class="bg-white rounded-lg shadow border-2 border-navy p-6 flex flex-col">
+  <div class="mb-4">
+    <h2 class="text-xl font-bold text-gray-900"><%= snapshot_title(snapshot.api_type) %></h2>
+    <p class="mt-1 text-sm text-gray-500">Last exported: <%= snapshot.formatted_date %></p>
+  </div>
+
+  <p class="text-sm text-gray-600 mb-4 flex-1"><%= snapshot_description(snapshot.api_type) %></p>
+
+  <div class="text-sm text-gray-700 mb-4 space-y-1">
+    <div><span class="font-medium">File:</span> <%= snapshot.filename %></div>
+    <div><span class="font-medium">Size:</span> <%= snapshot.formatted_size %></div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <%= link_to snapshot.url,
+          class: "text-center px-4 py-2 bg-blue text-white text-sm font-medium rounded-md hover:bg-navy",
+          download: snapshot.filename,
+          data: { turbo: false } do %>
+      Download File
+    <% end %>
+    <div class="flex gap-2">
+      <%= link_to "Historical Archive",
+            archive_snapshots_path(type: snapshot.api_type),
+            class: "flex-1 text-center px-3 py-1.5 border border-navy text-sm rounded-md text-navy hover:bg-gray-50" %>
+      <% if snapshot_instructions_url(snapshot.api_type) %>
+        <%= link_to "Instructions",
+              snapshot_instructions_url(snapshot.api_type),
+              class: "flex-1 text-center px-3 py-1.5 border border-navy text-sm rounded-md text-navy hover:bg-gray-50" %>
+      <% end %>
+    </div>
+  </div>
+</div>

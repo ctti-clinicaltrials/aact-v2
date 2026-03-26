@@ -1,0 +1,62 @@
+<% content_for :title, "#{snapshot_title(@type)} Archive — AACT" %>
+
+<div class="mb-6">
+  <%= render "shared/back_link", path: snapshots_path, label: "Snapshots" %>
+  <h1 class="text-3xl font-bold text-gray-900 mt-2"><%= snapshot_title(@type) %> Archive</h1>
+</div>
+
+<% if @daily_snapshots.none? && @monthly_snapshots.empty? %>
+  <%= render "empty_state",
+    title: "No Snapshots Available",
+    message: "No snapshots are currently available for this type." %>
+<% else %>
+  <!-- Daily Snapshots -->
+  <%= turbo_frame_tag "daily_snapshots" do %>
+    <div class="mb-10">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Daily Snapshots</h2>
+
+      <% if @daily_snapshots.any? %>
+        <%= render "snapshot_table", snapshots: @daily_snapshots %>
+
+        <div class="mt-4 flex justify-center">
+          <%== @pagy.series_nav %>
+        </div>
+      <% else %>
+        <%= render "empty_state",
+          title: "No Daily Snapshots",
+          message: "No recent daily snapshots are available for this type." %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Monthly Archive -->
+  <div>
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Monthly Archives</h2>
+
+    <%= turbo_frame_tag "monthly_archive" do %>
+      <% if @monthly_snapshots.any? %>
+        <!-- Year Navigation -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <% @monthly_snapshots.keys.sort.reverse.each do |year| %>
+            <%= link_to year,
+                  archive_snapshots_path(type: @type, year: year),
+                  class: "px-4 py-2 text-sm rounded-md font-medium #{year == @year ? 'bg-navy text-white' : 'bg-white border border-navy text-navy hover:bg-gray-50'}" %>
+          <% end %>
+        </div>
+
+        <% year_snapshots = @monthly_snapshots[@year] %>
+        <% if year_snapshots.present? %>
+          <%= render "snapshot_table", snapshots: year_snapshots.sort_by(&:created_at).reverse %>
+        <% else %>
+          <%= render "empty_state",
+            title: "No Archives for #{@year}",
+            message: "No monthly snapshots are available for this year." %>
+        <% end %>
+      <% else %>
+        <%= render "empty_state",
+          title: "No Monthly Archives",
+          message: "No monthly archives are currently available." %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

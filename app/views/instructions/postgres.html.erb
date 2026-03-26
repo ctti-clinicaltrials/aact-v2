@@ -1,0 +1,184 @@
+<% content_for :title, "PostgreSQL Instructions — AACT" %>
+
+<div class="max-w-5xl pl-12 space-y-10">
+  <div class="mb-8">
+    <%= render "shared/back_link", path: snapshots_path, label: "Snapshots" %>
+    <h1 class="text-3xl font-bold text-gray-900 mt-2">PostgreSQL Database Instructions</h1>
+  </div>
+
+  <section>
+    <h2 class="relative block w-full pl-4 text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 before:content-[''] before:absolute before:left-0 before:top-0 before:w-1.5 before:h-6 before:bg-navy before:rounded-sm">Overview</h2>
+    <div class="text-sm text-gray-700 space-y-3">
+      <p>
+        The PostgreSQL snapshots contain complete dumps of the AACT database that can be loaded into your local
+        PostgreSQL installation. This option is ideal for users who need to perform complex queries, want the best
+        performance, or need to integrate AACT data with other databases or tools.
+      </p>
+      <p>
+        The AACT system provides access to the <strong>30 most recent daily snapshots</strong> along with
+        permanent <strong>monthly archives</strong> created on the first day of each month. This ensures you
+        have both current data and historical reference points.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="relative block w-full pl-4 text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 before:content-[''] before:absolute before:left-0 before:top-0 before:w-1.5 before:h-6 before:bg-navy before:rounded-sm">Prerequisites</h2>
+    <div class="text-sm text-gray-700 space-y-3">
+      <p>
+        <strong>PostgreSQL Installation:</strong> You must have PostgreSQL installed on your system to use
+        these database dumps. If you haven't installed PostgreSQL yet, visit the
+        <a href="https://www.postgresql.org/download/" class="text-blue hover:underline" target="_blank">official PostgreSQL website</a>
+        to download the appropriate version for your operating system.
+      </p>
+      <p>
+        <strong>Version Compatibility:</strong> We recommend using PostgreSQL version 14 or higher. The
+        pg_dump tool used to create these snapshots is from PostgreSQL 14, and the dumps may contain features
+        that aren't compatible with earlier versions.
+      </p>
+      <p>
+        <strong>System Requirements:</strong> We recommend at least 8 GB of RAM and 10 GB of available disk
+        space for optimal performance when working with the full AACT database.
+      </p>
+      <p>
+        <strong>Technical Knowledge:</strong> Basic familiarity with command-line operations and SQL queries
+        is helpful but not required. These instructions provide step-by-step guidance for all necessary commands.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="relative block w-full pl-4 text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 before:content-[''] before:absolute before:left-0 before:top-0 before:w-1.5 before:h-6 before:bg-navy before:rounded-sm">Steps</h2>
+    <ol class="space-y-6">
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">1</span>
+        <div class="w-full">
+          <h3 class="font-medium text-gray-900 mb-1">Download a snapshot</h3>
+          <p class="text-sm text-gray-700">
+            Choose between the <%= link_to "latest snapshot", snapshots_path, class: "text-blue hover:underline" %>
+            or explore <%= link_to "past archives", archive_snapshots_path(type: "pgdump"), class: "text-blue hover:underline" %>
+            if you need older data.
+          </p>
+        </div>
+      </li>
+
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">2</span>
+        <div class="w-full">
+          <h3 class="font-medium text-gray-900 mb-1">Extract the ZIP file</h3>
+          <div class="text-sm text-gray-700 space-y-2">
+            <p>
+              Locate the downloaded ZIP file in your system's Downloads folder. Extract its contents to a
+              folder of your choice using your operating system's extraction tool or the command line.
+            </p>
+            <p>
+              The primary file you'll need is <code class="bg-gray-100 px-1 rounded text-xs">postgres.dmp</code>,
+              which contains the PostgreSQL database dump. The archive may also include supplementary files
+              to help you understand the database structure and field definitions.
+            </p>
+            <p>
+              To better understand the database structure, we recommend reviewing the
+              <%= link_to "documentation", documentation_index_path, class: "text-blue hover:underline" %>
+              available on our website.
+            </p>
+          </div>
+        </div>
+      </li>
+
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">3</span>
+        <div class="w-full">
+          <h3 class="font-medium text-gray-900 mb-1">Create a local database</h3>
+          <p class="text-sm text-gray-700 mb-2">
+            Open a terminal or command prompt and run the following command to create a new database called "aact":
+          </p>
+          <div class="bg-gray-100 text-gray-900 text-sm rounded-md px-4 py-3 font-mono">
+            createdb aact
+          </div>
+          <p class="mt-2 text-sm text-gray-600">
+            If you want to use a different database name, replace "aact" with your preferred name in this
+            command and the next one.
+          </p>
+        </div>
+      </li>
+
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">4</span>
+        <div class="w-full">
+          <h3 class="font-medium text-gray-900 mb-1">Restore from the dump file</h3>
+          <p class="text-sm text-gray-700 mb-2">
+            Use the <strong>pg_restore</strong> command to load the database dump into your newly created database:
+          </p>
+          <div class="bg-gray-100 text-gray-900 text-sm rounded-md px-4 py-3 font-mono">
+            pg_restore -e -v -O -x -d aact --no-owner path/to/postgres.dmp
+          </div>
+          <p class="mt-2 text-sm text-gray-700 mb-2">
+            Replace <code class="bg-gray-100 px-1 rounded text-xs">path/to/postgres.dmp</code> with the
+            actual path to where you extracted the dump file. This process typically takes 5–15 minutes.
+          </p>
+          <p class="text-sm text-gray-700 mb-2">
+            If you already have an AACT database and want to replace it with the new data, use this command instead:
+          </p>
+          <div class="bg-gray-100 text-gray-900 text-sm rounded-md px-4 py-3 font-mono">
+            pg_restore -e -v -O -x -d aact --clean --no-owner path/to/postgres.dmp
+          </div>
+          <p class="mt-3 text-sm font-medium text-gray-700 mb-1">Parameter explanation:</p>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li><code class="bg-gray-100 px-1 rounded text-xs">-e</code> — exit if an error occurs during restore</li>
+            <li><code class="bg-gray-100 px-1 rounded text-xs">-v</code> — verbose mode (shows progress)</li>
+            <li><code class="bg-gray-100 px-1 rounded text-xs">-O</code> — do not set ownership to match the original database</li>
+            <li><code class="bg-gray-100 px-1 rounded text-xs">-x</code> — prevent restoration of access privileges (grant/revoke)</li>
+            <li><code class="bg-gray-100 px-1 rounded text-xs">--no-owner</code> — skip restoration of object ownership</li>
+            <li><code class="bg-gray-100 px-1 rounded text-xs">--clean</code> — drop database objects before recreating them</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 bg-navy text-white text-sm font-bold rounded-full flex items-center justify-center">5</span>
+        <div class="w-full">
+          <h3 class="font-medium text-gray-900 mb-1">Connect to your database</h3>
+          <p class="text-sm text-gray-700 mb-2">
+            You can now connect to your local AACT database using any PostgreSQL client. To connect using
+            the command-line client:
+          </p>
+          <div class="bg-gray-100 text-gray-900 text-sm rounded-md px-4 py-3 font-mono">
+            psql -d aact
+          </div>
+          <p class="mt-2 text-sm text-gray-700">
+            Alternatively, you can use GUI tools like pgAdmin, DBeaver, Beekeeper Studio, or Postico to
+            connect to and query your database with a visual interface.
+          </p>
+          <p class="mt-2 text-sm text-gray-700">
+            For a quick test to verify your database is working, try running this simple query after connecting:
+          </p>
+          <div class="mt-2 bg-gray-100 text-gray-900 text-sm rounded-md px-4 py-3 font-mono">
+            SELECT count(*) FROM studies;
+          </div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2 class="relative block w-full pl-4 text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 before:content-[''] before:absolute before:left-0 before:top-0 before:w-1.5 before:h-6 before:bg-navy before:rounded-sm">Common Issues & Troubleshooting</h2>
+    <div class="text-sm text-gray-700 space-y-3">
+      <p>
+        <strong>Permission errors:</strong> If you encounter permission issues during database creation or
+        restoration, you may need to run the commands with administrator/sudo privileges or check that your
+        PostgreSQL user has the appropriate permissions.
+      </p>
+      <p>
+        <strong>Database already exists:</strong> If you get an error saying the database already exists,
+        you can either drop the existing database with
+        <code class="bg-gray-100 px-1 rounded text-xs">dropdb aact</code> before creating it again, or
+        use the <code class="bg-gray-100 px-1 rounded text-xs">--clean</code> option in pg_restore as shown in step 4.
+      </p>
+      <p>
+        <strong>Memory or disk space issues:</strong> If restoration fails due to insufficient resources,
+        try closing other applications to free up memory, or ensure you have adequate disk space available.
+      </p>
+    </div>
+  </section>
+
+</div>
