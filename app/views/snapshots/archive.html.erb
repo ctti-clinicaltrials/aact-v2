@@ -1,7 +1,7 @@
 <% content_for :title, "#{snapshot_title(@type)} Archive — AACT" %>
 
 <div class="mb-6">
-  <%= render "shared/back_link", path: downloads_path, label: "Downloads" %>
+  <%= render "shared/back_link", path: snapshots_path, label: "Snapshots" %>
   <h1 class="text-3xl font-bold text-gray-900 mt-2"><%= snapshot_title(@type) %> Archive</h1>
 </div>
 
@@ -66,7 +66,7 @@
         <div class="flex flex-wrap gap-2 mb-6">
           <% @monthly_snapshots.keys.sort.reverse.each do |year| %>
             <%= link_to year,
-                  download_snapshots_path(type: @type, year: year),
+                  archive_snapshots_path(type: @type, year: year),
                   class: "px-4 py-2 text-sm rounded-md font-medium #{year == @year ? 'bg-navy text-white' : 'bg-white border border-navy text-navy hover:bg-gray-50'}" %>
           <% end %>
         </div>

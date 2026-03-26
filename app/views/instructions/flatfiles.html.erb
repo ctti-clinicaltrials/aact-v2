@@ -1,7 +1,7 @@
 <% content_for :title, "Flat Files Instructions — AACT" %>
 
 <div class="mb-6">
-  <%= render "shared/back_link", path: downloads_path, label: "Downloads" %>
+  <%= render "shared/back_link", path: snapshots_path, label: "Snapshots" %>
   <h1 class="text-3xl font-bold text-gray-900 mt-2">Pipe-Delimited Flat Files Instructions</h1>
 </div>
 
@@ -38,8 +38,8 @@
         <div>
           <h3 class="font-medium text-gray-900 mb-1">Download a snapshot</h3>
           <p class="text-sm text-gray-700">
-            Get the <%= link_to "latest snapshot", downloads_path, class: "text-blue hover:underline" %> or
-            browse the <%= link_to "archive", download_snapshots_path(type: "flatfiles"), class: "text-blue hover:underline" %> for older data.
+            Get the <%= link_to "latest snapshot", snapshots_path, class: "text-blue hover:underline" %> or
+            browse the <%= link_to "archive", archive_snapshots_path(type: "flatfiles"), class: "text-blue hover:underline" %> for older data.
           </p>
         </div>
       </li>

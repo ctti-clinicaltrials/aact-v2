@@ -1,4 +1,4 @@
-module DownloadsHelper
+module SnapshotsHelper
   SNAPSHOT_CONFIG = {
     "pgdump" => {
       title: "PostgreSQL Database Dump",

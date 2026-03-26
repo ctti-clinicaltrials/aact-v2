@@ -1,7 +1,7 @@
 <% content_for :title, "COVID-19 Instructions — AACT" %>
 
 <div class="mb-6">
-  <%= render "shared/back_link", path: downloads_path, label: "Downloads" %>
+  <%= render "shared/back_link", path: snapshots_path, label: "Snapshots" %>
   <h1 class="text-3xl font-bold text-gray-900 mt-2">COVID-19 Spreadsheet Instructions</h1>
 </div>
 
@@ -40,7 +40,7 @@
           <h3 class="font-medium text-gray-900 mb-1">Download a COVID-19 spreadsheet</h3>
           <p class="text-sm text-gray-700">
             Browse available files on the
-            <%= link_to "COVID-19 archive page", download_snapshots_path(type: "covid"), class: "text-blue hover:underline" %>.
+            <%= link_to "COVID-19 archive page", archive_snapshots_path(type: "covid"), class: "text-blue hover:underline" %>.
           </p>
         </div>
       </li>

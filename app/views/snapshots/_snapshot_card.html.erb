@@ -20,7 +20,7 @@
     <% end %>
     <div class="flex gap-2">
       <%= link_to "Historical Archive",
-            download_snapshots_path(type: snapshot.api_type),
+            archive_snapshots_path(type: snapshot.api_type),
             class: "flex-1 text-center px-3 py-1.5 border border-navy text-sm rounded-md text-navy hover:bg-gray-50" %>
       <% if snapshot_instructions_url(snapshot.api_type) %>
         <%= link_to "Instructions",

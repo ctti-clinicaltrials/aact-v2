@@ -15,13 +15,15 @@ Rails.application.routes.draw do
     root to: redirect("/settings/database_access")
   end
 
-  # Downloads routes
-  scope :downloads do
-    root to: "downloads#index", as: :downloads
-    get "snapshots", to: "downloads#snapshots", as: :download_snapshots
-    get "postgres_instructions", to: "downloads#postgres_instructions", as: :postgres_instructions
-    get "flatfiles_instructions", to: "downloads#flatfiles_instructions", as: :flatfiles_instructions
-    get "covid19_instructions", to: "downloads#covid19_instructions", as: :covid19_instructions
+  # Snapshots routes
+  get "snapshots", to: "snapshots#index", as: :snapshots
+  get "snapshots/archive", to: "snapshots#archive", as: :archive_snapshots
+
+  # Instructions routes
+  scope :instructions do
+    get "postgres", to: "instructions#postgres", as: :postgres_instructions
+    get "flatfiles", to: "instructions#flatfiles", as: :flatfiles_instructions
+    get "covid19", to: "instructions#covid19", as: :covid19_instructions
   end
 
   # Documentation routes
