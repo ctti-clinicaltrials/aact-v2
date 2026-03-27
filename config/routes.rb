@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   # Snapshots routes
   get "snapshots", to: "snapshots#index", as: :snapshots
   get "snapshots/archive", to: "snapshots#archive", as: :archive_snapshots
+  get "snapshots/:id/download", to: "snapshots#download", as: :download_snapshot
 
   # Instructions routes
   scope :instructions do
