@@ -1,6 +1,4 @@
 class SnapshotsController < ApplicationController
-  allow_unauthenticated_access
-
   before_action :set_service
   before_action :validate_type, only: [ :archive ]
 

@@ -33,9 +33,8 @@
 
           <!-- Navigation Links -->
           <div class="flex items-center space-x-4">
-            <%= link_to "Snapshots", snapshots_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
             <% if authenticated? %>
-              <!-- Resources -->
+              <%= link_to "Snapshots", snapshots_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
               <%= link_to "Documentation", documentation_index_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
 
               <% if Current.user&.admin? %>
