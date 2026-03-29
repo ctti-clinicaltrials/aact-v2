@@ -41,7 +41,7 @@ namespace :analytics do
         }
       end
 
-      Analytics::SnapshotDownload.insert_all(records) if records.any?
+      Analytics::SnapshotDownload.insert_all(records, record_timestamps: false) if records.any?
 
       total_imported += records.size
       last_id = rows[rows.ntuples - 1]["id"].to_i
