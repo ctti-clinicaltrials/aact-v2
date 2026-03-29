@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   # Snapshots routes
   get "snapshots", to: "snapshots#index", as: :snapshots
   get "snapshots/archive", to: "snapshots#archive", as: :archive_snapshots
+  get "snapshots/:id/download", to: "snapshots#download", as: :download_snapshot
 
   # Instructions routes
   scope :instructions do
@@ -52,6 +53,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :download_events, only: [ :create ]
       resources :documentation, only: [ :index, :update ]
       resources :snapshots, only: [ :index ] do
         collection do

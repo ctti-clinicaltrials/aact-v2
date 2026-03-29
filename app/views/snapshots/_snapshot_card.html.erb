@@ -12,9 +12,8 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <%= link_to snapshot.url,
+    <%= link_to download_snapshot_path(snapshot.id),
           class: "text-center px-4 py-2 bg-blue text-white text-sm font-medium rounded-md hover:bg-navy",
-          download: snapshot.filename,
           data: { turbo: false } do %>
       Download File
     <% end %>

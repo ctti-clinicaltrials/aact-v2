@@ -62,6 +62,42 @@ ALTER SEQUENCE public.aact_public_query_metrics_id_seq OWNED BY public.aact_publ
 
 
 --
+-- Name: analytics_snapshot_downloads; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.analytics_snapshot_downloads (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    file_type character varying NOT NULL,
+    snapshot_id character varying NOT NULL,
+    ip_address character varying,
+    user_agent character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    source character varying DEFAULT 'web'::character varying NOT NULL
+);
+
+
+--
+-- Name: analytics_snapshot_downloads_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.analytics_snapshot_downloads_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: analytics_snapshot_downloads_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.analytics_snapshot_downloads_id_seq OWNED BY public.analytics_snapshot_downloads.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -318,6 +354,13 @@ ALTER TABLE ONLY public.aact_public_query_metrics ALTER COLUMN id SET DEFAULT ne
 
 
 --
+-- Name: analytics_snapshot_downloads id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.analytics_snapshot_downloads ALTER COLUMN id SET DEFAULT nextval('public.analytics_snapshot_downloads_id_seq'::regclass);
+
+
+--
 -- Name: ctgov_metadata id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -365,6 +408,14 @@ ALTER TABLE ONLY snapshots.ctgov_metadata ALTER COLUMN id SET DEFAULT nextval('s
 
 ALTER TABLE ONLY public.aact_public_query_metrics
     ADD CONSTRAINT aact_public_query_metrics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: analytics_snapshot_downloads analytics_snapshot_downloads_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.analytics_snapshot_downloads
+    ADD CONSTRAINT analytics_snapshot_downloads_pkey PRIMARY KEY (id);
 
 
 --
@@ -436,6 +487,34 @@ ALTER TABLE ONLY snapshots.ctgov_metadata
 --
 
 CREATE UNIQUE INDEX index_aact_public_query_metrics_on_log_date_and_username ON public.aact_public_query_metrics USING btree (log_date, username);
+
+
+--
+-- Name: index_analytics_snapshot_downloads_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_analytics_snapshot_downloads_on_created_at ON public.analytics_snapshot_downloads USING btree (created_at);
+
+
+--
+-- Name: index_analytics_snapshot_downloads_on_file_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_analytics_snapshot_downloads_on_file_type ON public.analytics_snapshot_downloads USING btree (file_type);
+
+
+--
+-- Name: index_analytics_snapshot_downloads_on_source; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_analytics_snapshot_downloads_on_source ON public.analytics_snapshot_downloads USING btree (source);
+
+
+--
+-- Name: index_analytics_snapshot_downloads_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_analytics_snapshot_downloads_on_user_id ON public.analytics_snapshot_downloads USING btree (user_id);
 
 
 --
@@ -572,6 +651,14 @@ CREATE INDEX index_ctgov_metadata_on_created_at ON snapshots.ctgov_metadata USIN
 
 
 --
+-- Name: analytics_snapshot_downloads fk_rails_22fa5bbe06; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.analytics_snapshot_downloads
+    ADD CONSTRAINT fk_rails_22fa5bbe06 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: sessions fk_rails_758836b4f0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -586,6 +673,8 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260327210756'),
+('20260327015820'),
 ('20260219151943'),
 ('20260215120000'),
 ('20251209120000'),
