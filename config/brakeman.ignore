@@ -24,6 +24,29 @@
       "note": "False positive - using quote_column_name() for safe SQL escaping"
     },
     {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "3a4e31b087a4a522dcb7f47849afd95c03f0b5a6f1d18401bc49517f47cea7d7",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/snapshots_controller.rb",
+      "line": 18,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Aact::Snapshot.find(params[:id]).url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "SnapshotsController",
+        "method": "download"
+      },
+      "user_input": "Aact::Snapshot.find(params[:id]).url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "URL sourced from internal DB (support.file_records), not user input"
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "6442788bd92fee71200df72e469d0230e3c88393b61b04ef20de148147950f7e",
