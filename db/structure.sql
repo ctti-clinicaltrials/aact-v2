@@ -73,7 +73,8 @@ CREATE TABLE public.analytics_snapshot_downloads (
     ip_address character varying,
     user_agent character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    source character varying DEFAULT 'web'::character varying NOT NULL
 );
 
 
@@ -503,6 +504,13 @@ CREATE INDEX index_analytics_snapshot_downloads_on_file_type ON public.analytics
 
 
 --
+-- Name: index_analytics_snapshot_downloads_on_source; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_analytics_snapshot_downloads_on_source ON public.analytics_snapshot_downloads USING btree (source);
+
+
+--
 -- Name: index_analytics_snapshot_downloads_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -665,6 +673,7 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260327210756'),
 ('20260327015820'),
 ('20260219151943'),
 ('20260215120000'),

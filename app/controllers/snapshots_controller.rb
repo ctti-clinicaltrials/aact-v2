@@ -24,6 +24,7 @@ class SnapshotsController < ApplicationController
         user: Current.user,
         file_type: snapshot.api_type,
         snapshot_id: snapshot.id.to_s,
+        source: "web",
         ip_address: request.remote_ip,
         user_agent: request.user_agent
       ) if snapshot

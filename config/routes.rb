@@ -53,6 +53,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :download_events, only: [ :create ]
       resources :documentation, only: [ :index, :update ]
       resources :snapshots, only: [ :index ] do
         collection do
