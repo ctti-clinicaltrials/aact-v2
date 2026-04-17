@@ -4,3 +4,4 @@
   - [default, 2]
   - [critical, 3]
   - [mailers, 1]
+:max_retries: 3

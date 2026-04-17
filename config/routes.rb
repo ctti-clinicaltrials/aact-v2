@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     end
     get "usage", to: "usage#index"
     get "usage/:date", to: "usage#show", as: :daily_usage
+    get "downloads", to: "downloads#index"
     resources :ctgov_metadata, only: [ :index ] do
       collection do
         post :sync
