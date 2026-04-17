@@ -1,0 +1,97 @@
+<div class="mx-auto max-w-6xl">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Snapshot Downloads</h1>
+
+  <!-- Date Range Selector -->
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h2 class="text-sm font-medium text-gray-700 mb-3">Select Date Range</h2>
+    <%= form_tag admin_downloads_path, method: :get, class: "flex items-end gap-4" do %>
+      <div>
+        <%= label_tag :start_date, "Start Date", class: "block text-sm text-gray-600 mb-1" %>
+        <%= date_field_tag :start_date, @start_date, class: "block w-full rounded-md border-gray-300 shadow-sm text-sm" %>
+      </div>
+      <div>
+        <%= label_tag :end_date, "End Date", class: "block text-sm text-gray-600 mb-1" %>
+        <%= date_field_tag :end_date, @end_date, class: "block w-full rounded-md border-gray-300 shadow-sm text-sm" %>
+      </div>
+      <div>
+        <%= submit_tag "Apply", class: "px-6 py-2 bg-navy text-white text-sm font-medium rounded-md hover:bg-navy/90 cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @metrics.present? %>
+    <!-- Downloads Summary -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+      <h2 class="text-sm font-medium text-gray-700 mb-4">
+        Downloads Summary: <%= @start_date.strftime("%b %d, %Y") %> - <%= @end_date.strftime("%b %d, %Y") %> (<%= @metrics.size %> days)
+      </h2>
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div class="border border-navy/20 rounded-lg p-4 text-center">
+          <div class="text-sm text-gray-500 mb-1">Total Downloads</div>
+          <div class="text-xl font-bold"><%= number_with_delimiter(@total_downloads) %></div>
+        </div>
+        <div class="border border-navy/20 rounded-lg p-4 text-center">
+          <div class="text-sm text-gray-500 mb-1">Authenticated</div>
+          <div class="text-xl font-bold"><%= number_with_delimiter(@total_authenticated) %></div>
+        </div>
+        <div class="border border-navy/20 rounded-lg p-4 text-center">
+          <div class="text-sm text-gray-500 mb-1">% Authenticated</div>
+          <div class="text-xl font-bold"><%= @authenticated_share %>%</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="border border-navy/20 rounded-lg p-4 text-center">
+          <div class="text-sm text-gray-500 mb-1">Avg Downloads/Day</div>
+          <div class="text-xl font-bold"><%= number_with_delimiter(@avg_downloads) %></div>
+        </div>
+        <div class="border border-navy/20 rounded-lg p-4 text-center">
+          <div class="text-sm text-gray-500 mb-1">Max Downloads/Day</div>
+          <div class="text-xl font-bold"><%= number_with_delimiter(@max_downloads) %></div>
+        </div>
+        <div class="border border-navy/20 rounded-lg p-4 text-center">
+          <div class="text-sm text-gray-500 mb-1">Min Downloads/Day</div>
+          <div class="text-xl font-bold"><%= number_with_delimiter(@min_downloads) %></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily Metrics Table -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="px-6 py-4 flex justify-between items-center border-b border-navy/20">
+        <h2 class="text-sm font-medium text-navy">Daily Snapshot Downloads</h2>
+        <span class="text-xs text-gray-500">Includes backfilled admin downloads from before Mar 2026. Covid excluded.</span>
+      </div>
+      <table class="min-w-full divide-y divide-navy/10">
+        <thead class="bg-navy/5">
+          <tr>
+            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Date</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Authenticated</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Web Flatfiles</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Web Pgdump</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">API Flatfiles</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">API Pgdump</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-navy/10">
+          <% @metrics.each do |metric| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-3 text-center text-sm text-gray-900"><%= metric[:date].strftime("%b %d, %Y") %></td>
+              <td class="px-6 py-3 text-right text-sm text-gray-900"><%= number_with_delimiter(metric[:total]) %></td>
+              <td class="px-6 py-3 text-right text-sm text-gray-900"><%= number_with_delimiter(metric[:authenticated]) %></td>
+              <td class="px-6 py-3 text-right text-sm text-gray-900"><%= number_with_delimiter(metric[:web_flatfiles]) %></td>
+              <td class="px-6 py-3 text-right text-sm text-gray-900"><%= number_with_delimiter(metric[:web_pgdump]) %></td>
+              <td class="px-6 py-3 text-right text-sm text-gray-900"><%= number_with_delimiter(metric[:api_flatfiles]) %></td>
+              <td class="px-6 py-3 text-right text-sm text-gray-900"><%= number_with_delimiter(metric[:api_pgdump]) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+      <h3 class="text-lg font-medium text-yellow-800 mb-2">No Data Available</h3>
+      <p class="text-yellow-700">No download data found for the selected date range.</p>
+    </div>
+  <% end %>
+</div>
