@@ -16,9 +16,6 @@ module Aact
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
-    # Ensure workers are autoloaded (for Sidekiq)
-    # config.autoload_paths += %W[#{config.root}/app/workers]
-
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

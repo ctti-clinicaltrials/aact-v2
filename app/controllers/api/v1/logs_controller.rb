@@ -12,7 +12,7 @@ module Api
 
         Rails.logger.info "Processing JSON logs request for date: #{date}"
         begin
-          job_id = ::JsonLogsProcessorWorker.perform_async(date)
+          job_id = ::ProcessJsonLogsJob.perform_later(date).job_id
 
           render json: {
             status: "success",
