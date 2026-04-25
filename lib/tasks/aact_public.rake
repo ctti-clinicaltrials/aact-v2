@@ -65,23 +65,23 @@ namespace :logs do
     end
   end
 
-  desc "Process JSON logs for a specific date (using Sidekiq)"
+  desc "Process JSON logs for a specific date"
   task :process_json, [ :date ] => :environment do |t, args|
     date = args[:date] || Date.yesterday.strftime("%Y-%m-%d")
 
     puts "=== Enqueuing JSON logs processing job for #{date} ==="
-    job_id = JsonLogsProcessorWorker.perform_async(date)
+    job_id = ProcessJsonLogsJob.perform_later(date).job_id
     puts "=== Job enqueued with ID: #{job_id} ==="
   end
 
-  desc "Download and process JSON logs for yesterday (using Sidekiq)"
+  desc "Download and process JSON logs for yesterday"
   task daily_process_json: :environment do
     date = Date.yesterday.strftime("%Y-%m-%d")
 
     puts "=== Enqueuing daily JSON logs processing job for #{date} ==="
     Rails.logger.info "Enqueuing daily JSON log processing for #{date}"
 
-    job_id = JsonLogsProcessorWorker.perform_async(date)
+    job_id = ProcessJsonLogsJob.perform_later(date).job_id
 
     puts "=== Job enqueued with ID: #{job_id} ==="
     Rails.logger.info "Daily JSON log processing job enqueued with ID: #{job_id}"

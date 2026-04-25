@@ -10,11 +10,5 @@ class AdminDownloadEventJob < ApplicationJob
       ip_address: ip_address,
       user_agent: user_agent
     )
-  rescue => e
-    Sentry.capture_exception(e,
-      tags: { feature: "admin_download_event" },
-      extra: { snapshot_id: snapshot_id, source: source, user_id: user_id }
-    )
-    raise
   end
 end

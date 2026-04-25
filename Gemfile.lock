@@ -316,9 +316,6 @@ GEM
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
-    sentry-sidekiq (6.4.1)
-      sentry-ruby (~> 6.4.1)
-      sidekiq (>= 5.0)
     sidekiq (7.3.9)
       base64
       connection_pool (>= 2.3.0)
@@ -408,7 +405,6 @@ DEPENDENCIES
   selenium-webdriver
   sentry-rails
   sentry-ruby
-  sentry-sidekiq
   sidekiq
   sidekiq-cron
   solid_cable

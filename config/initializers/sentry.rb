@@ -23,8 +23,4 @@ Sentry.init do |config|
 
   # Includes request headers and user IP in error reports. Keep false unless needed.
   config.send_default_pii = false
-
-  # Only report Sidekiq job errors after all retries exhausted, not on every attempt.
-  # Default is false (reports on every attempt, which is noisy for high-retry jobs).
-  config.sidekiq.report_after_job_retries = true
 end
