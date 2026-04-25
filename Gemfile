@@ -30,7 +30,6 @@ gem "sidekiq-cron"
 
 gem "sentry-ruby"
 gem "sentry-rails"
-gem "sentry-sidekiq"
 
 gem "tailwindcss-rails"
 # Pagination [https://github.com/ddnexus/pagy]

@@ -2,3 +2,9 @@ process_json_logs:
   cron: "0 6 * * *"
   class: ProcessJsonLogsJob
   description: "Process yesterday's PgBadger JSON logs"
+
+sync_users_from_admin:
+  cron: "0 5 * * *"
+  class: SyncUsersJob
+  # queue: default # job is the source of truth for the queue
+  description: "Sync users from legacy to the new aact during pre-release stage"
