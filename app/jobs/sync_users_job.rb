@@ -12,7 +12,7 @@ class SyncUsersJob < ApplicationJob
 
     rows = conn.exec(<<~SQL)
       SELECT
-        email, encrypted_password,
+        id, email, encrypted_password,
         remember_created_at,
         sign_in_count, current_sign_in_at, last_sign_in_at,
         current_sign_in_ip, last_sign_in_ip,
@@ -37,7 +37,6 @@ class SyncUsersJob < ApplicationJob
         next
       end
 
-      # TODO: update logic when lastname added as separate field to the user schema
       first = row["first_name"].to_s.strip
       last = row["last_name"].to_s.strip
       name = "#{first} #{last}".strip
@@ -46,6 +45,7 @@ class SyncUsersJob < ApplicationJob
       username = row["username"].to_s.strip.presence
 
       metadata = {
+        id: row["id"],
         first_name: first.presence,
         last_name: last.presence,
         admin: row["admin"],
@@ -67,14 +67,15 @@ class SyncUsersJob < ApplicationJob
       is_new = user.nil?
       user ||= User.new(email_address: email)
 
+      user.legacy_user_id = row["id"]
+      user.first_name = first.presence
+      user.last_name = last.presence
       user.name = name
       user.database_username = username
       user.migrated = true
       user.metadata = metadata
       user.password_digest = row["encrypted_password"]
-      # TEMP: is_new guard removed for one-time correction of existing migrated users.
-      # Restore `is_new &&` after first successful prod sync to lock created_at after that.
-      user.created_at = row["account_created_at"] if row["account_created_at"].present?
+      user.created_at = row["account_created_at"] if is_new && row["account_created_at"].present?
 
       user.save!
 
