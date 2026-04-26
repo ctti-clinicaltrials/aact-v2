@@ -9,10 +9,18 @@
 
 <%= form_with model: @user, url: settings_profile_path, method: :patch, class: "space-y-6" do |form| %>
   <div>
-    <%= form.label :name, "Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= form.text_field :name, 
-          required: true, 
-          autocomplete: "name",
+    <%= form.label :first_name, "First Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <%= form.text_field :first_name,
+          required: true,
+          autocomplete: "given-name",
+          class: "block w-full sm:w-96 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+  </div>
+
+  <div>
+    <%= form.label :last_name, "Last Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <%= form.text_field :last_name,
+          required: true,
+          autocomplete: "family-name",
           class: "block w-full sm:w-96 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
   </div>
 
