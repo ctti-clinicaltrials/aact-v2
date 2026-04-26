@@ -24,8 +24,11 @@ class User < ApplicationRecord
   attr_readonly :admin
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
+  normalizes :first_name, :last_name, with: ->(v) { v&.strip.presence }
 
   validates :email_address, presence: true, uniqueness: true
+  validates :first_name, presence: true, length: { maximum: 50 }
+  validates :last_name, presence: true, length: { maximum: 50 }
   validates :name, presence: true
   validates :database_username, uniqueness: true, allow_blank: true
 

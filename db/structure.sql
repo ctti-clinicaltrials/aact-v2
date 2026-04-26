@@ -289,7 +289,9 @@ CREATE TABLE public.users (
     database_creation_error text,
     database_creation_attempted_at timestamp(6) without time zone,
     migrated boolean DEFAULT false NOT NULL,
-    metadata jsonb
+    metadata jsonb,
+    first_name character varying(50),
+    last_name character varying(50)
 );
 
 
@@ -673,6 +675,7 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260425231615'),
 ('20260327210756'),
 ('20260327015820'),
 ('20260219151943'),
