@@ -291,7 +291,8 @@ CREATE TABLE public.users (
     migrated boolean DEFAULT false NOT NULL,
     metadata jsonb,
     first_name character varying(50),
-    last_name character varying(50)
+    last_name character varying(50),
+    legacy_user_id bigint
 );
 
 
@@ -629,6 +630,13 @@ CREATE UNIQUE INDEX index_users_on_database_username ON public.users USING btree
 --
 
 CREATE UNIQUE INDEX index_users_on_email_address ON public.users USING btree (email_address);
+
+
+--
+-- Name: index_users_on_legacy_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_legacy_user_id ON public.users USING btree (legacy_user_id) WHERE (legacy_user_id IS NOT NULL);
 
 
 --
