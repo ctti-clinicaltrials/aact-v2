@@ -26,6 +26,8 @@ class User < ApplicationRecord
   normalizes :email_address, with: ->(e) { e.strip.downcase }
   normalizes :first_name, :last_name, with: ->(v) { v&.strip.presence }
 
+  before_validation :set_full_name
+
   validates :email_address, presence: true, uniqueness: true
   validates :first_name, presence: true, length: { maximum: 50 }
   validates :last_name, presence: true, length: { maximum: 50 }
@@ -41,5 +43,12 @@ class User < ApplicationRecord
   # Check if user has database credentials
   def has_database_credentials?
     database_username.present? && database_password.present?
+  end
+
+  private
+
+  def set_full_name
+    return unless first_name.present? || last_name.present?
+    self.name = "#{first_name} #{last_name}".strip
   end
 end
