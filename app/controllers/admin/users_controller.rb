@@ -6,7 +6,13 @@ class Admin::UsersController < Admin::BaseController
 
     @pagy, @users = pagy(scope, limit: 20)
 
-    render :results if turbo_frame_request?
+    if turbo_frame_request?
+      render :results
+    else
+      @total_users = User.count
+      @joined_last_30_days = User.where(created_at: 30.days.ago..).count
+      @joined_last_7_days = User.where(created_at: 7.days.ago..).count
+    end
   end
 
   def show
