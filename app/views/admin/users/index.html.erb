@@ -3,6 +3,25 @@
     <h1 class="text-3xl font-bold text-gray-900 mb-2">Admin - Users</h1>
   </div>
 
+  <!-- User Summary -->
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h2 class="text-sm font-medium text-gray-700 mb-4">User Summary</h2>
+    <div class="grid grid-cols-3 gap-4">
+      <div class="border border-navy/20 rounded-lg p-4 text-center">
+        <div class="text-sm text-gray-500 mb-1">Total AACT Users</div>
+        <div class="text-xl font-bold"><%= number_with_delimiter(@total_users) %></div>
+      </div>
+      <div class="border border-navy/20 rounded-lg p-4 text-center">
+        <div class="text-sm text-gray-500 mb-1">Joined Last 30 Days</div>
+        <div class="text-xl font-bold"><%= number_with_delimiter(@joined_last_30_days) %></div>
+      </div>
+      <div class="border border-navy/20 rounded-lg p-4 text-center">
+        <div class="text-sm text-gray-500 mb-1">Joined Last 7 Days</div>
+        <div class="text-xl font-bold"><%= number_with_delimiter(@joined_last_7_days) %></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Search -->
   <div class="mb-6 bg-white p-4 rounded-lg shadow">
     <%= form_with url: admin_users_path, method: :get, data: { turbo_frame: "admin_users_results" } do |f| %>
