@@ -39,7 +39,8 @@
 
               <% if Current.user&.admin? %>
                 <%= link_to "Users", admin_users_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
-                <%= link_to "Usage", admin_usage_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
+                <%= link_to "DB Usage", admin_usage_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
+                <%= link_to "Playground Usage", admin_playground_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
                 <%= link_to "Downloads Stats", admin_downloads_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
                 <%= link_to "CTGov", admin_ctgov_metadata_path, class: "text-sm text-gray-700 hover:text-blue-600" %>
               <% end %>
