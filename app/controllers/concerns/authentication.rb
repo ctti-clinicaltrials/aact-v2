@@ -54,4 +54,11 @@ module Authentication
       Current.session.destroy
       cookies.delete(:session_id)
     end
+
+    # Lazy fallback to Current.user. Required by Ahoy, which calls current_user
+    # from a before_action that runs before our session resumption.
+    def current_user
+      resume_session
+      Current.user
+    end
 end
