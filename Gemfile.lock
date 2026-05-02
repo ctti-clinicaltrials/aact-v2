@@ -180,7 +180,7 @@ GEM
       timeout
     net-smtp (0.5.1)
       net-protocol
-    next_rails (1.4.6)
+    next_rails (1.5.0)
       rainbow (>= 3)
     nio4r (2.7.4)
     nokogiri (1.18.10)
