@@ -4,6 +4,7 @@ module Api
       # Skip authentication for API endpoints (server-to-server)
       allow_unauthenticated_access
 
+      skip_before_action :track_ahoy_visit
       before_action :setup_snapshots_service
 
       def index
