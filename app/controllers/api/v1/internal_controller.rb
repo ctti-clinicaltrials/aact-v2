@@ -1,7 +1,9 @@
 module Api
   module V1
     class InternalController < ApplicationController
+      # TODO: use with other legacy admin controllers
       allow_unauthenticated_access
+      skip_before_action :track_ahoy_visit
       skip_before_action :verify_authenticity_token
       wrap_parameters false
 

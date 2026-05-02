@@ -9,6 +9,7 @@ module Api
       # TODO: review before deploying
       # Completely skips CSRF verification for all actions in this controller
       skip_before_action :verify_authenticity_token
+      skip_before_action :track_ahoy_visit
 
       before_action :setup_documentation_service
 

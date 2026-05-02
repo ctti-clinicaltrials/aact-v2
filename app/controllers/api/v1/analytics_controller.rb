@@ -4,6 +4,8 @@ module Api
       # Skip authentication for API endpoints (server-to-server)
       allow_unauthenticated_access
 
+      skip_before_action :track_ahoy_visit
+
       before_action :set_date_params, only: [ :database_usage, :user_usage ]
       before_action :set_service, only: [ :database_usage, :user_usage ]
 
