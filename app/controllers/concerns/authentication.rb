@@ -61,4 +61,9 @@ module Authentication
       resume_session
       Current.user
     end
+
+    def complete_authentication(user)
+      start_new_session_for(user)
+      Ahoy::Visit.claim_anonymous_for(user, visitor_token: ahoy.visitor_token)
+    end
 end

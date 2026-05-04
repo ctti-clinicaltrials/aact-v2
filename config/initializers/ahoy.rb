@@ -8,3 +8,7 @@ Ahoy.api = false
 # we recommend configuring local geocoding as well
 # see https://github.com/ankane/ahoy#geocoding
 Ahoy.geocode = true
+
+Rails.application.config.to_prepare do
+  Rails::PwaController.skip_before_action :track_ahoy_visit, raise: false
+end
