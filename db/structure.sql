@@ -284,6 +284,76 @@ ALTER SEQUENCE public.documentation_items_id_seq OWNED BY public.documentation_i
 
 
 --
+-- Name: etl_run_steps; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.etl_run_steps (
+    id bigint NOT NULL,
+    etl_run_id bigint NOT NULL,
+    "position" integer NOT NULL,
+    name character varying NOT NULL,
+    status character varying NOT NULL,
+    started_at timestamp(6) without time zone,
+    finished_at timestamp(6) without time zone,
+    core_job_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: etl_run_steps_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.etl_run_steps_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: etl_run_steps_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.etl_run_steps_id_seq OWNED BY public.etl_run_steps.id;
+
+
+--
+-- Name: etl_runs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.etl_runs (
+    id bigint NOT NULL,
+    status character varying NOT NULL,
+    started_at timestamp(6) without time zone,
+    finished_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: etl_runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.etl_runs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: etl_runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.etl_runs_id_seq OWNED BY public.etl_runs.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -478,6 +548,20 @@ ALTER TABLE ONLY public.documentation_items ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: etl_run_steps id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.etl_run_steps ALTER COLUMN id SET DEFAULT nextval('public.etl_run_steps_id_seq'::regclass);
+
+
+--
+-- Name: etl_runs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.etl_runs ALTER COLUMN id SET DEFAULT nextval('public.etl_runs_id_seq'::regclass);
+
+
+--
 -- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -559,6 +643,22 @@ ALTER TABLE ONLY public.ctgov_metadata
 
 ALTER TABLE ONLY public.documentation_items
     ADD CONSTRAINT documentation_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: etl_run_steps etl_run_steps_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.etl_run_steps
+    ADD CONSTRAINT etl_run_steps_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: etl_runs etl_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.etl_runs
+    ADD CONSTRAINT etl_runs_pkey PRIMARY KEY (id);
 
 
 --
@@ -749,6 +849,20 @@ CREATE UNIQUE INDEX index_documentation_items_on_table_name_and_column_name ON p
 
 
 --
+-- Name: index_etl_run_steps_on_etl_run_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_etl_run_steps_on_etl_run_id ON public.etl_run_steps USING btree (etl_run_id);
+
+
+--
+-- Name: index_etl_run_steps_on_etl_run_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_etl_run_steps_on_etl_run_id_and_position ON public.etl_run_steps USING btree (etl_run_id, "position");
+
+
+--
 -- Name: index_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -834,6 +948,14 @@ ALTER TABLE ONLY public.analytics_snapshot_downloads
 
 
 --
+-- Name: etl_run_steps fk_rails_273c71153c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.etl_run_steps
+    ADD CONSTRAINT fk_rails_273c71153c FOREIGN KEY (etl_run_id) REFERENCES public.etl_runs(id);
+
+
+--
 -- Name: sessions fk_rails_758836b4f0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -848,6 +970,7 @@ ALTER TABLE ONLY public.sessions
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260520120000'),
 ('20260502022039'),
 ('20260425231615'),
 ('20260327210756'),

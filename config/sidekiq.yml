@@ -3,6 +3,7 @@
   - [logs, 3]
   - [default, 2]
   - [critical, 3]
+  - [etl, 2]
   - [mailers, 1]
   - [ahoy, 1]
 :max_retries: 3
