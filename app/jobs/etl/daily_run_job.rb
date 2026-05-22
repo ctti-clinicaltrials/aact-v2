@@ -3,14 +3,16 @@ module Etl
     queue_as :etl
     sidekiq_options retry: 0
 
-    STEPS = %w[download_studies remove_indexes add_indexes].freeze
+    STEPS = %w[download_studies remove_indexes process_studies add_indexes process_search_terms].freeze
 
     # Maps step name → core's full class name in support.etl_jobs.type.
     # Cross-app contract: if core renames a class, update both sides + migrate existing rows.
     STI_CLASS = {
-      "download_studies" => "Support::EtlJob::DownloadStudies",
-      "remove_indexes"   => "Support::EtlJob::RemoveIndexes",
-      "add_indexes"      => "Support::EtlJob::AddIndexes"
+      "download_studies"     => "Support::EtlJob::DownloadStudies",
+      "remove_indexes"       => "Support::EtlJob::RemoveIndexes",
+      "process_studies"      => "Support::EtlJob::ProcessStudies",
+      "add_indexes"          => "Support::EtlJob::AddIndexes",
+      "process_search_terms" => "Support::EtlJob::ProcessSearchTerms"
     }.freeze
 
     # start_date: callers should always pass an explicit "yyyy-mm-dd" string.
