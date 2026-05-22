@@ -3,14 +3,20 @@ module Etl
     queue_as :etl
     sidekiq_options retry: 0
 
-    STEPS = %w[download_studies remove_indexes add_indexes].freeze
+    STEPS = %w[download_studies remove_indexes process_studies add_indexes process_search_terms sanity_checks].freeze
+
+    # Publishing steps run only if sanity_checks passed. Grows as TakeSnapshot/RefreshPublicDb/CreateFlatFiles land.
+    PUBLISHING_STEPS = %w[].freeze
 
     # Maps step name → core's full class name in support.etl_jobs.type.
     # Cross-app contract: if core renames a class, update both sides + migrate existing rows.
     STI_CLASS = {
-      "download_studies" => "Support::EtlJob::DownloadStudies",
-      "remove_indexes"   => "Support::EtlJob::RemoveIndexes",
-      "add_indexes"      => "Support::EtlJob::AddIndexes"
+      "download_studies"     => "Support::EtlJob::DownloadStudies",
+      "remove_indexes"       => "Support::EtlJob::RemoveIndexes",
+      "process_studies"      => "Support::EtlJob::ProcessStudies",
+      "add_indexes"          => "Support::EtlJob::AddIndexes",
+      "process_search_terms" => "Support::EtlJob::ProcessSearchTerms",
+      "sanity_checks"        => "Support::EtlJob::SanityChecks"
     }.freeze
 
     # start_date: callers should always pass an explicit "yyyy-mm-dd" string.
@@ -25,12 +31,23 @@ module Etl
       run = EtlRun.create!(status: "running", started_at: Time.now)
       steps = create_step_rows(run)
 
+      sanity_passed = true
+
       steps.each do |step|
+        if PUBLISHING_STEPS.include?(step.name) && !sanity_passed
+          step.update!(status: "skipped")
+          next
+        end
+
         data = step.name == "download_studies" ? { start_date: start_date } : {}
         run_core_step(step, data: data)
+
+        if step.name == "sanity_checks"
+          sanity_passed = Aact::EtlJob.find(step.core_job_id).result["passed"]
+        end
       end
 
-      run.update!(status: "complete", finished_at: Time.now)
+      run.update!(status: sanity_passed ? "complete" : "stopped", finished_at: Time.now)
     rescue StandardError
       run&.update!(status: "error", finished_at: Time.now)
       raise
