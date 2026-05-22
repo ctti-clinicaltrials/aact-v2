@@ -3,10 +3,14 @@ module Etl
     queue_as :etl
     sidekiq_options retry: 0
 
-    STEPS = %w[download_studies remove_indexes process_studies add_indexes process_search_terms sanity_checks].freeze
+    STEPS = %w[
+      download_studies remove_indexes process_studies add_indexes
+      process_search_terms sanity_checks
+      take_snapshot publish_snapshot refresh_public_db create_flat_files
+    ].freeze
 
-    # Publishing steps run only if sanity_checks passed. Grows as TakeSnapshot/RefreshPublicDb/CreateFlatFiles land.
-    PUBLISHING_STEPS = %w[].freeze
+    # Publishing steps run only if sanity_checks passed; skipped (status="skipped") otherwise.
+    PUBLISHING_STEPS = %w[take_snapshot publish_snapshot refresh_public_db create_flat_files].freeze
 
     # Maps step name → core's full class name in support.etl_jobs.type.
     # Cross-app contract: if core renames a class, update both sides + migrate existing rows.
@@ -16,7 +20,11 @@ module Etl
       "process_studies"      => "Support::EtlJob::ProcessStudies",
       "add_indexes"          => "Support::EtlJob::AddIndexes",
       "process_search_terms" => "Support::EtlJob::ProcessSearchTerms",
-      "sanity_checks"        => "Support::EtlJob::SanityChecks"
+      "sanity_checks"        => "Support::EtlJob::SanityChecks",
+      "take_snapshot"        => "Support::EtlJob::TakeSnapshot",
+      "publish_snapshot"     => "Support::EtlJob::PublishSnapshot",
+      "refresh_public_db"    => "Support::EtlJob::RefreshPublicDb",
+      "create_flat_files"    => "Support::EtlJob::CreateFlatFiles"
     }.freeze
 
     # start_date: callers should always pass an explicit "yyyy-mm-dd" string.
