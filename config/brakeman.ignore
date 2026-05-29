@@ -68,6 +68,29 @@
         77
       ],
       "note": "False positive - using quote_column_name() for safe escaping"
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "e4f93eb9e3d0e76b67a612902cdf4ffe075b51ffc630b7afd3df14da1a769557",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/api/v1/snapshots_controller.rb",
+      "line": 33,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Aact::Snapshot.find(params[:id]).url, :allow_other_host => true)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::V1::SnapshotsController",
+        "method": "download"
+      },
+      "user_input": "Aact::Snapshot.find(params[:id]).url",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ],
+      "note": "URL sourced from internal DB (support.file_records), not user input"
     }
   ],
   "brakeman_version": "8.0.4"
