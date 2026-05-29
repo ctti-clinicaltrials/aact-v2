@@ -58,19 +58,23 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :download_events, only: [ :create ]
       resources :documentation, only: [ :index, :update ]
+      # support legacy aact snapshots functionality
       resources :downloads, only: [ :index ] do
         collection do
           get :latest
         end
       end
 
-      # Legacy alias of /api/v1/downloads — aact-admin still calls /api/v1/snapshots.
-      # Remove after aact-admin is updated to use the new path.
-      resources :snapshots, only: [ :index ], controller: "downloads" do
+      # public snapshots api
+      resources :snapshots, only: [ :index, :show ], defaults: { format: :json } do
         collection do
           get :latest
         end
+        member do
+          get :download
+        end
       end
+
       get "analytics/database_usage"
       get "analytics/user_usage"
 
