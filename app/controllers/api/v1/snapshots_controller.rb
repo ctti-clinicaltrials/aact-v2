@@ -53,7 +53,6 @@ module Api
           available_types: Aact::Snapshot::TYPE_MAPPING.keys
         }, status: :bad_request
       end
-
     end
   end
 end
