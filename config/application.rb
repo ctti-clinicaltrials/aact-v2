@@ -37,5 +37,6 @@ module Aact
     # ViewComponent
     config.view_component.generate.sidecar = true
     config.view_component.generate.preview = true
+    config.view_component.previews.default_layout = "component_preview"
   end
 end
