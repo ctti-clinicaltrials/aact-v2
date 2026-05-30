@@ -5,4 +5,8 @@ class StatCardComponent < ViewComponent::Base
     @label = label
     @value = value
   end
+
+  private
+
+  attr_reader :label, :value
 end
