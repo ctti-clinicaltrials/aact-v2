@@ -33,5 +33,9 @@ module Aact
 
     # Configure ActiveJob to use Sidekiq
     config.active_job.queue_adapter = :sidekiq
+
+    # ViewComponent
+    config.view_component.generate.sidecar = true
+    config.view_component.generate.preview = true
   end
 end

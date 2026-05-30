@@ -34,6 +34,7 @@ gem "sentry-rails"
 gem "tailwindcss-rails"
 # Pagination [https://github.com/ddnexus/pagy]
 gem "pagy"
+gem "view_component", "~> 4.9"
 
 # Fast JSON parser with streaming support for large files
 gem "oj"
