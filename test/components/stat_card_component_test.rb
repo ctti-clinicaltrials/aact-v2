@@ -14,7 +14,7 @@ class StatCardComponentTest < ViewComponent::TestCase
     render_inline(StatCardComponent.new(label: "Total AACT Users", value: "10,358"))
 
     # there is one visible div carrying both styles whose text includes 10,358
-    assert_selector "div.text-xl.font-bold", text: "10,358", count: 1
+    assert_selector "dd.text-xl.font-bold", text: "10,358", count: 1
   end
 
   def test_accepts_non_string_values
