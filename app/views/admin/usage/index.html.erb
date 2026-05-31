@@ -25,33 +25,14 @@
       <h2 class="text-sm font-medium text-gray-700 mb-4">
         Usage Summary: <%= @start_date.strftime("%b %d, %Y") %> - <%= @end_date.strftime("%b %d, %Y") %> (<%= @metrics.size %> days)
       </h2>
+      
       <div class="grid grid-cols-3 gap-4 mb-4">
-        <div class="border border-navy/20 rounded-lg p-4 text-center">
-          <div class="text-sm text-gray-500 mb-1">Avg Users/Day</div>
-          <div class="text-xl font-bold"><%= number_with_delimiter(@avg_users) %></div>
-        </div>
-        <div class="border border-navy/20 rounded-lg p-4 text-center">
-          <div class="text-sm text-gray-500 mb-1">Max Users/Day</div>
-          <div class="text-xl font-bold"><%= number_with_delimiter(@max_users) %></div>
-        </div>
-        <div class="border border-navy/20 rounded-lg p-4 text-center">
-          <div class="text-sm text-gray-500 mb-1">Min Users/Day</div>
-          <div class="text-xl font-bold"><%= number_with_delimiter(@min_users) %></div>
-        </div>
-      </div>
-      <div class="grid grid-cols-3 gap-4">
-        <div class="border border-navy/20 rounded-lg p-4 text-center">
-          <div class="text-sm text-gray-500 mb-1">Total Queries</div>
-          <div class="text-xl font-bold"><%= number_with_delimiter(@total_queries) %></div>
-        </div>
-        <div class="border border-navy/20 rounded-lg p-4 text-center">
-          <div class="text-sm text-gray-500 mb-1">Avg Queries/Day</div>
-          <div class="text-xl font-bold"><%= number_with_delimiter(@avg_queries_per_day) %></div>
-        </div>
-        <div class="border border-navy/20 rounded-lg p-4 text-center">
-          <div class="text-sm text-gray-500 mb-1">Avg Query Duration</div>
-          <div class="text-xl font-bold"><%= @avg_duration %> ms</div>
-        </div>
+        <%= render StatCardComponent.new(label: "Avg Users/Day", value: number_with_delimiter(@avg_users)) %>
+        <%= render StatCardComponent.new(label: "Max Users/Day", value: number_with_delimiter(@max_users) ) %>
+        <%= render StatCardComponent.new(label: "Min Users/Day", value: number_with_delimiter(@min_users) ) %>
+        <%= render StatCardComponent.new(label: "Total Queries", value: number_with_delimiter(@total_queries) ) %>
+        <%= render StatCardComponent.new(label: "Avg Queries/Day", value: number_with_delimiter(@avg_queries_per_day) ) %>
+        <%= render StatCardComponent.new(label: "Avg Query Duration", value: "#{@avg_duration} ms" ) %>
       </div>
     </div>
 
