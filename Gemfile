@@ -40,7 +40,7 @@ gem "view_component", "~> 4.9"
 gem "oj"
 
 # HTTP client for API requests
-gem "faraday", "~> 2.7"
+gem "faraday", "~> 2.14"
 gem "faraday-retry"
 gem "faraday-typhoeus"  # HTTP/2 support
 
