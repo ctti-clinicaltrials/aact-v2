@@ -27,6 +27,10 @@ gem "jbuilder"
 # Background job processing
 gem "sidekiq"
 gem "sidekiq-cron"
+# Pinned to 2.x: Sidekiq 7.x is incompatible with connection_pool 3.x's
+# changed TimedStack#pop signature (crashes the scheduler on boot).
+# Revisit when upgrading to Sidekiq 8.x, which requires connection_pool >= 3.0.
+gem "connection_pool", "~> 2.5"
 
 gem "sentry-ruby"
 gem "sentry-rails"
