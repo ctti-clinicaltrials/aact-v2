@@ -1,0 +1,95 @@
+<div class="mx-auto max-w-4xl">
+  <header class="mb-10">
+    <h1 class="text-3xl font-bold text-ink">Style guide</h1>
+    <p class="text-ink-muted mt-1">
+      Brand design tokens, defined in <code>app/assets/tailwind/application.css</code> (<code>@theme</code>).
+      Internal reference — not linked in the nav.
+    </p>
+  </header>
+
+  <!-- Color swatches -->
+  <h2 class="text-sm font-semibold text-ink mb-3">Color swatches</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10">
+    <div>
+      <div class="h-16 rounded-md bg-primary"></div>
+      <p class="mt-1 text-sm font-medium text-ink">primary</p>
+      <p class="text-xs text-ink-muted">#224989 · bg-primary</p>
+    </div>
+    <div>
+      <div class="h-16 rounded-md bg-secondary"></div>
+      <p class="mt-1 text-sm font-medium text-ink">secondary</p>
+      <p class="text-xs text-ink-muted">#1F3C5D · bg-secondary</p>
+    </div>
+    <div>
+      <div class="h-16 rounded-md bg-link"></div>
+      <p class="mt-1 text-sm font-medium text-ink">link</p>
+      <p class="text-xs text-ink-muted">#246BB0 · text-link (links only)</p>
+    </div>
+    <div>
+      <div class="h-16 rounded-md bg-accent"></div>
+      <p class="mt-1 text-sm font-medium text-ink">accent</p>
+      <p class="text-xs text-ink-muted">#871621 · bg-accent</p>
+    </div>
+    <div>
+      <div class="h-16 rounded-md bg-ink"></div>
+      <p class="mt-1 text-sm font-medium text-ink">ink</p>
+      <p class="text-xs text-ink-muted">#404040 · bg-ink</p>
+    </div>
+    <div>
+      <div class="h-16 rounded-md bg-ink-muted"></div>
+      <p class="mt-1 text-sm font-medium text-ink">ink-muted</p>
+      <p class="text-xs text-ink-muted">#5C6068 · bg-ink-muted</p>
+    </div>
+    <div>
+      <div class="h-16 rounded-md bg-surface-alt border border-secondary/20"></div>
+      <p class="mt-1 text-sm font-medium text-ink">surface-alt</p>
+      <p class="text-xs text-ink-muted">#F7F7F7 · bg-surface-alt</p>
+    </div>
+  </div>
+
+  <!-- Text colors -->
+  <h2 class="text-sm font-semibold text-ink mb-3">Text colors</h2>
+  <div class="space-y-1 mb-10">
+    <p class="text-primary">text-primary — the quick brown fox jumps over the lazy dog</p>
+    <p class="text-secondary">text-secondary — the quick brown fox jumps over the lazy dog</p>
+    <p class="text-link">text-link — the quick brown fox jumps over the lazy dog</p>
+    <p class="text-accent">text-accent — the quick brown fox jumps over the lazy dog</p>
+    <p class="text-ink">text-ink — the quick brown fox jumps over the lazy dog</p>
+    <p class="text-ink-muted">text-ink-muted — the quick brown fox jumps over the lazy dog</p>
+  </div>
+
+  <!-- Buttons -->
+  <h2 class="text-sm font-semibold text-ink mb-3">Buttons</h2>
+  <div class="flex flex-wrap gap-3 mb-10">
+    <button type="button" class="px-4 py-2 rounded-md bg-primary text-white text-sm font-medium hover:bg-secondary transition-colors">
+      Primary (hover → secondary)
+    </button>
+    <button type="button" class="px-4 py-2 rounded-md bg-white text-primary text-sm font-medium border border-primary hover:bg-surface-alt transition-colors">
+      Outline
+    </button>
+    <button type="button" class="px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:opacity-90 transition-opacity">
+      Accent
+    </button>
+  </div>
+
+  <!-- Links -->
+  <h2 class="text-sm font-semibold text-ink mb-3">Links</h2>
+  <p class="text-ink mb-10">
+    This is body text with an
+    <%= link_to "inline link", admin_style_guide_path, class: "text-link hover:underline" %>
+    (uses <code class="text-ink-muted">text-link</code> — the brighter CTTI blue, links only).
+  </p>
+
+  <!-- Surface / card -->
+  <h2 class="text-sm font-semibold text-ink mb-3">Surface &amp; borders</h2>
+  <div class="grid sm:grid-cols-2 gap-4">
+    <div class="bg-surface-alt border border-secondary/20 rounded-lg p-4">
+      <p class="font-medium text-ink">Card on surface-alt</p>
+      <p class="text-sm text-ink-muted mt-1">bg-surface-alt with a border-secondary/20 outline.</p>
+    </div>
+    <div class="bg-white border border-primary rounded-lg p-4">
+      <p class="font-medium text-secondary">Card with primary border</p>
+      <p class="text-sm text-ink-muted mt-1">bg-white with a border-primary outline.</p>
+    </div>
+  </div>
+</div>
