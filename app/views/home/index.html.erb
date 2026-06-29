@@ -2,13 +2,13 @@
   <% if authenticated? %>
     <!-- Authenticated User Greeting -->
     <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-gray-900 mb-4">
+      <h1 class="text-4xl font-bold text-secondary mb-4">
         Welcome back to AACT!
       </h1>
-      <p class="text-xl text-gray-600 mb-6">
+      <p class="text-xl text-ink mb-6">
         Hello <%= Current.user&.name || "there" %> 👋
       </p>
-      <p class="text-sm text-gray-500">
+      <p class="text-sm text-ink-muted">
         Member since <%= Current.user&.created_at&.strftime("%B %Y") %>
       </p>
     </div>
@@ -16,10 +16,10 @@
   <% else %>
     <!-- Generic Greeting -->
     <div class="text-center">
-      <h1 class="text-5xl font-bold text-gray-900 mb-4">
+      <h1 class="text-5xl font-bold text-secondary mb-4">
         Welcome to AACT
       </h1>
-      <p class="text-xl text-gray-600 mb-8">
+      <p class="text-xl text-ink-muted mb-8">
         Aggregate Analysis of ClinicalTrials.gov
       </p>
     </div>

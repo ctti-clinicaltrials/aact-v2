@@ -1,12 +1,25 @@
 @import "tailwindcss";
 @import "./components/pagy.css";
 
-/* AACT brand colors — update hex values as needed.
-   Tailwind v4 @theme generates utility classes: text-navy, bg-crimson, etc. */
+/* AACT brand tokens — aligned to the CTTI website palette so AACT reads as a
+   natural extension of ctti-clinicaltrials.org. Tailwind v4 @theme generates
+   utilities from each token: --color-blue -> bg-blue/text-blue/border-blue, etc. */
 @theme {
-  --color-navy: #2d3769;
-  --color-blue: #3b6e9e;
-  --color-sky: #9fb8d4;
-  --color-crimson: #8b1a2b;
-  --color-red: #a81e35;
+  /* Brand colors — semantic names, CTTI two-blue system. Use these going forward. */
+  --color-primary: #224989;    /* deep brand blue: buttons, accents */
+  --color-secondary: #1F3C5D;  /* navy: hover, headings, dark accents/bands */
+  --color-link: #246BB0;       /* CTTI bright primary blue — inline links only (for now) */
+  --color-accent: #871621;     /* brand red (from the shared logo) — accent only, not a UI state */
+
+  /* Warm neutral text — CTTI uses warmer grays than Tailwind's cool defaults */
+  --color-ink: #404040;        /* default body / UI text */
+  --color-ink-muted: #5C6068;  /* secondary text */
+
+  /* Surfaces */
+  --color-surface-alt: #F7F7F7;  /* light section background */
+
+  /* DEPRECATED aliases — kept so existing views keep rendering until migrated.
+     Same hex as the semantic tokens above. Remove once views use primary/secondary. */
+  --color-blue: #224989;   /* -> primary */
+  --color-navy: #1F3C5D;   /* -> secondary */
 }

@@ -1,9 +1,6 @@
 {
   "css.customData": [],
   "css.lint.unknownAtRules": "ignore",
-  "files.associations": {
-    "*.css": "tailwindcss"
-  },
   "tailwindCSS.experimental.classRegex": [],
   "tailwindCSS.lint.recommendedVariantOrder": "ignore"
 }
